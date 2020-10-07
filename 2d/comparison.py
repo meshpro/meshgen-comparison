@@ -4,10 +4,11 @@ import meshplex
 import numpy
 from rich.progress import Progress
 
+# import cgal_examples
 import dmsh_examples
+import meshpy_examples
 import meshzoo_examples
 import pygmsh_examples
-import meshpy_examples
 
 
 def disk():
@@ -17,10 +18,11 @@ def disk():
     quality_avg = []
     num_cells = []
     modules = {
-        "meshzoo": meshzoo_examples,
-        "gmsh": pygmsh_examples,
+        # "cgal": cgal_examples,
         "dmsh": dmsh_examples,
+        "gmsh": pygmsh_examples,
         "meshpy": meshpy_examples,
+        "meshzoo": meshzoo_examples,
     }
     with Progress() as progress:
         task1 = progress.add_task("Overall", total=len(H))
