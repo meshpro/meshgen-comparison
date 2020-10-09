@@ -11,5 +11,5 @@ def disk(h):
             compound=True,
         )
         mesh = geom.generate_mesh()
-        mesh.prune_z_0()
+    mesh.prune_z_0()
     return mesh.points, mesh.get_cells_type("triangle")
