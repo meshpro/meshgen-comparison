@@ -1,5 +1,5 @@
 import dmsh
-# import optimesh
+import numpy
 
 
 def disk(h):
@@ -11,3 +11,18 @@ def disk(h):
     #     points, cells, 1.0e-2, 100, verbose=False
     # )
     # return points, cells
+
+
+def rect_with_refinement(h):
+    return dmsh.generate(
+        dmsh.Rectangle(-1.0, 1.0, -1.0, 1.0),
+        edge_size=lambda x: h + 0.1 * numpy.sqrt(x[0] ** 2 + x[1] ** 2),
+        tol=1.0e-10
+    )
+
+
+if __name__ == "__main__":
+    import meshio
+
+    points, cells = rect_with_refinement(0.01)
+    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")

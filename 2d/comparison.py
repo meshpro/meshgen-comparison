@@ -35,46 +35,52 @@ import pygalmesh_examples
 import pygmsh_examples
 import seismicmesh_examples
 
+cat20_colors = [
+    ("#1f77b4", "#aec7e8"),
+    ("#ff7f0e", "#ffbb78"),
+    ("#2ca02c", "#98df8a"),
+    ("#d62728", "#ff9896"),
+    ("#9467bd", "#c5b0d5"),
+    ("#8c564b", "#c49c94"),
+    ("#e377c2", "#f7b6d2"),
+    ("#7f7f7f", "#c7c7c7"),
+    ("#bcbd22", "#dbdb8d"),
+    ("#17becf", "#9edae5"),
+]
+
 
 def disk():
+    functions = {
+        f"CGAL {pygalmesh.__cgal_version__}": pygalmesh_examples.disk,
+        f"dmsh {dmsh.__version__}": dmsh_examples.disk,
+        f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples.disk,
+        f"MeshPy {meshpy.version}": meshpy_examples.disk,
+        f"meshzoo {meshzoo.__version__}": meshzoo_examples.disk,
+        "SeismicMesh": seismicmesh_examples.disk,
+    }
     # total runtime:
     # H = numpy.logspace(0.0, -1.5, num=15)  #  13.39s
     # H = numpy.logspace(0.0, -2.0, num=15)  # 227.95s
     # H = numpy.logspace(0.0, -2.1, num=15)  # 299.02s
     # H = numpy.logspace(-1.0, -2.1, num=15)  # 577.11s
     H = numpy.logspace(0.0, -2.1, num=15)  # 299.02s
+
+    create_plots("disk", functions, H)
+
+
+def create_plots(prefix, functions, H):
     times = []
     quality_min = []
     quality_avg = []
     num_poisson_steps = []
     num_points = []
-    modules = {
-        f"CGAL {pygalmesh.__cgal_version__}": pygalmesh_examples,
-        f"dmsh {dmsh.__version__}": dmsh_examples,
-        f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples,
-        f"MeshPy {meshpy.version}": meshpy_examples,
-        f"meshzoo {meshzoo.__version__}": meshzoo_examples,
-        "SeismicMesh": seismicmesh_examples,
-    }
-    # cat20 colors
-    colors = [
-        ("#1f77b4", "#aec7e8"),
-        ("#ff7f0e", "#ffbb78"),
-        ("#2ca02c", "#98df8a"),
-        ("#d62728", "#ff9896"),
-        ("#9467bd", "#c5b0d5"),
-        ("#8c564b", "#c49c94"),
-        # ("#e377c2", "#f7b6d2"),
-        # ("#7f7f7f", "#c7c7c7"),
-        # ("#bcbd22", "#dbdb8d"),
-        # ("#17becf", "#9edae5"),
-    ]
-    assert len(colors) == len(modules)
+
+    colors = cat20_colors[:len(functions)]
 
     poisson_tol = 1.0e-10
     with Progress() as progress:
         task1 = progress.add_task("Overall", total=len(H))
-        task2 = progress.add_task("Modules", total=len(modules))
+        task2 = progress.add_task("Functions", total=len(functions))
         for h in H:
             times.append([])
             quality_min.append([])
@@ -82,9 +88,9 @@ def disk():
             num_poisson_steps.append([])
             num_points.append([])
             progress.update(task2, completed=0)
-            for module in modules.values():
+            for fun in functions.values():
                 tic = time.time()
-                points, cells = module.disk(h)
+                points, cells = fun(h)
                 toc = time.time()
 
                 mesh = meshplex.MeshTri(points, cells)
@@ -109,37 +115,19 @@ def disk():
     num_poisson_steps = numpy.array(num_poisson_steps)
     num_points = numpy.array(num_points)
 
-    print("names:")
-    print(list(modules.keys()))
-    print()
-    print("num_points:")
-    print(num_points)
-    print()
-    print("times:")
-    print(times)
-    print()
-    print("quality_avg:")
-    print(quality_avg)
-    print()
-    print("quality_min:")
-    print(quality_min)
-    print()
-    print("num_poisson_steps:")
-    print(num_poisson_steps)
-
     # plot the data
     plt.style.use(dufte.style)
-    for name, num_pts, t, cols in zip(modules.keys(), num_points.T, times.T, colors):
+    for name, num_pts, t, cols in zip(functions.keys(), num_points.T, times.T, colors):
         plt.loglog(num_pts, t, color=cols[0], label=name)
     dufte.legend()
     plt.xlabel("num points")
     plt.title("mesh creation times [s]")
-    plt.savefig("disk-times.svg", transparent=True, bbox_inches="tight")
+    plt.savefig(f"{prefix}-times.svg", transparent=True, bbox_inches="tight")
     # plt.show()
     plt.close()
 
     for name, num_pts, qa, qm, cols in zip(
-        modules.keys(), num_points.T, quality_avg.T, quality_min.T, colors
+        functions.keys(), num_points.T, quality_avg.T, quality_min.T, colors
     ):
         plt.semilogx(num_pts, qa, color=cols[0], linestyle="-", label=f"{name} (avg)")
         plt.semilogx(num_pts, qm, color=cols[1], linestyle="--", label=f"{name} (min)")
@@ -147,18 +135,18 @@ def disk():
     dufte.legend()
     plt.xlabel("num points")
     plt.title("cell quality")
-    plt.savefig("disk-quality.svg", transparent=True, bbox_inches="tight")
+    plt.savefig(f"{prefix}-quality.svg", transparent=True, bbox_inches="tight")
     # plt.show()
     plt.close()
 
     for name, num_pts, np, cols in zip(
-        modules.keys(), num_points.T, num_poisson_steps.T, colors
+        functions.keys(), num_points.T, num_poisson_steps.T, colors
     ):
         plt.semilogx(num_pts, np, color=cols[0], label=f"{name}")
     dufte.legend()
     plt.xlabel("num points")
     plt.title(f"number of CG steps for the Poisson problem (tol={poisson_tol:.1e})")
-    plt.savefig("disk-poisson.svg", transparent=True, bbox_inches="tight")
+    plt.savefig(f"{prefix}-poisson.svg", transparent=True, bbox_inches="tight")
     # plt.show()
     plt.close()
 
