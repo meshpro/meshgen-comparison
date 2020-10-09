@@ -33,6 +33,7 @@ import meshpy_examples
 import meshzoo_examples
 import pygalmesh_examples
 import pygmsh_examples
+import seismicmesh_examples
 
 
 def disk():
@@ -53,6 +54,7 @@ def disk():
         f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples,
         f"MeshPy {meshpy.version}": meshpy_examples,
         f"meshzoo {meshzoo.__version__}": meshzoo_examples,
+        "SeismicMesh": seismicmesh_examples,
     }
     # cat20 colors
     colors = [
@@ -61,7 +63,7 @@ def disk():
         ("#2ca02c", "#98df8a"),
         ("#d62728", "#ff9896"),
         ("#9467bd", "#c5b0d5"),
-        # ("#8c564b", "#c49c94"),
+        ("#8c564b", "#c49c94"),
         # ("#e377c2", "#f7b6d2"),
         # ("#7f7f7f", "#c7c7c7"),
         # ("#bcbd22", "#dbdb8d"),
