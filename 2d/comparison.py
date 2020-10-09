@@ -68,6 +68,19 @@ def disk():
     create_plots("disk", functions, H)
 
 
+def rect_with_refinement():
+    functions = {
+        f"dmsh {dmsh.__version__}": dmsh_examples.rect_with_refinement,
+        f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples.rect_with_refinement,
+        f"MeshPy {meshpy.version}": meshpy_examples.disk,
+        "SeismicMesh": seismicmesh_examples.disk,
+    }
+    # total runtime:
+    H = numpy.logspace(0.0, -2.1, num=15)  # 299.02s
+
+    create_plots("rect-with-refinement", functions, H)
+
+
 def create_plots(prefix, functions, H):
     times = []
     quality_min = []
