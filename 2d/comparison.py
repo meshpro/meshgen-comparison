@@ -1,5 +1,11 @@
 import time
 
+import dmsh
+import meshpy
+import meshzoo
+import pygalmesh
+import pygmsh
+
 from dolfin import (
     Mesh,
     XDMFFile,
@@ -31,22 +37,22 @@ import pygmsh_examples
 
 def disk():
     # total runtime:
-    # H = numpy.logspace(0, -1.5, num=15)  #  13.39s
-    # H = numpy.logspace(0, -2.0, num=15)  # 227.95s
-    # H = numpy.logspace(0, -2.1, num=15)  # 299.02s
+    # H = numpy.logspace(0.0, -1.5, num=15)  #  13.39s
+    # H = numpy.logspace(0.0, -2.0, num=15)  # 227.95s
+    # H = numpy.logspace(0.0, -2.1, num=15)  # 299.02s
     # H = numpy.logspace(-1.0, -2.1, num=15)  # 577.11s
-    H = numpy.logspace(0, -2.1, num=15)  # 299.02s
+    H = numpy.logspace(0.0, -2.1, num=15)  # 299.02s
     times = []
     quality_min = []
     quality_avg = []
     num_poisson_steps = []
     num_points = []
     modules = {
-        "cgal": pygalmesh_examples,
-        "dmsh": dmsh_examples,
-        "gmsh": pygmsh_examples,
-        "meshpy": meshpy_examples,
-        "meshzoo": meshzoo_examples,
+        f"CGAL {pygalmesh.__cgal_version__}": pygalmesh_examples,
+        f"dmsh {dmsh.__version__}": dmsh_examples,
+        f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples,
+        f"MeshPy {meshpy.version}": meshpy_examples,
+        f"meshzoo {meshzoo.__version__}": meshzoo_examples,
     }
     # cat20 colors
     colors = [
