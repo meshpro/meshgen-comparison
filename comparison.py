@@ -220,4 +220,5 @@ def get_poisson_steps(pts, cells, tol):
 
 
 if __name__ == "__main__":
-    disk()
+    # disk()
+    rect_with_refinement()

@@ -57,7 +57,9 @@ def rect_with_refinement(h):
             (verts[0].x + verts[1].x + verts[2].x) / 3,
             (verts[0].y + verts[1].y + verts[2].y) / 3,
         ]
-        return numpy.any(edge_lengths > h + 0.1 * math.sqrt(bc[0] ** 2 + bc[1] ** 2))
+        lim = h + 0.1 * math.sqrt(bc[0] ** 2 + bc[1] ** 2)
+        # relax the limit a bit; the refinement is too strict otherwise
+        return numpy.any(edge_lengths > lim * 1.5)
 
     info = meshpy.triangle.MeshInfo()
     info.set_points(points)
@@ -65,14 +67,11 @@ def rect_with_refinement(h):
 
     mesh = meshpy.triangle.build(info, refinement_func=needs_refinement)
 
-    points = numpy.array(mesh.points)
-    cells = numpy.array(mesh.elements)
-
-    # import meshio
-    # meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
-
-    return points, cells
+    return numpy.array(mesh.points), numpy.array(mesh.elements)
 
 
 if __name__ == "__main__":
-    rect_with_refinement(0.1)
+    import meshio
+
+    points, cells = rect_with_refinement(0.1)
+    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
