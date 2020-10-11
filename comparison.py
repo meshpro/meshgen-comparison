@@ -1,3 +1,4 @@
+import os
 import time
 
 import dmsh
@@ -81,6 +82,19 @@ def rect_with_refinement():
     create_plots("rect-with-refinement", functions, H)
 
 
+def ball():
+    functions = {
+        f"CGAL {pygalmesh.__cgal_version__}": pygalmesh_examples.ball,
+        f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples.ball,
+        # f"MeshPy {meshpy.version}": meshpy_examples.rect_with_refinement,
+        f"SeismicMesh {SeismicMesh.__version__}": seismicmesh_examples.ball,
+    }
+    # total runtime:
+    H = numpy.logspace(0.0, -2.1, num=15)
+
+    create_plots("ball", functions, H)
+
+
 def create_plots(prefix, functions, H):
     times = []
     quality_min = []
@@ -106,14 +120,18 @@ def create_plots(prefix, functions, H):
                 points, cells = fun(h)
                 toc = time.time()
 
-                mesh = meshplex.MeshTri(points, cells)
+                if cells.shape[1] == 3:
+                    mesh = meshplex.MeshTri(points, cells)
+                else:
+                    assert cells.shape[1] == 4
+                    mesh = meshplex.MeshTetra(points, cells)
 
                 times[-1].append(toc - tic)
-                quality_min[-1].append(numpy.min(mesh.cell_quality))
-                quality_avg[-1].append(numpy.average(mesh.cell_quality))
+                quality_min[-1].append(numpy.min(mesh.q_radius_ratio))
+                quality_avg[-1].append(numpy.average(mesh.q_radius_ratio))
                 num_points[-1].append(mesh.node_coords.shape[0])
 
-                if numpy.min(mesh.cell_quality) < 1.0e-5:
+                if numpy.min(mesh.q_radius_ratio) < 1.0e-5:
                     num_poisson_steps[-1].append(numpy.nan)
                 else:
                     num_steps = get_poisson_steps(points, cells, poisson_tol)
@@ -142,12 +160,12 @@ def create_plots(prefix, functions, H):
     for name, num_pts, qa, qm, cols in zip(
         functions.keys(), num_points.T, quality_avg.T, quality_min.T, colors
     ):
-        plt.semilogx(num_pts, qa, color=cols[0], linestyle="-", label=f"{name} (avg)")
-        plt.semilogx(num_pts, qm, color=cols[1], linestyle="--", label=f"{name} (min)")
+        plt.semilogx(num_pts, qa, color=cols[0], linestyle="-", label=f"{name}")
+        plt.semilogx(num_pts, qm, color=cols[1], linestyle="--")
         plt.ylim(0.0, 1.0)
     dufte.legend()
     plt.xlabel("num points")
-    plt.title("cell quality")
+    plt.title("cell quality, avg  and min (dashed)")
     plt.savefig(f"{prefix}-quality.svg", transparent=True, bbox_inches="tight")
     # plt.show()
     plt.close()
@@ -167,10 +185,17 @@ def create_plots(prefix, functions, H):
 def get_poisson_steps(pts, cells, tol):
     # Still can't initialize a mesh from points, cells
     filename = "mesh.xdmf"
-    meshio.write_points_cells(filename, pts, {"triangle": cells})
+    if cells.shape[1] == 3:
+        meshio.write_points_cells(filename, pts, {"triangle": cells})
+    else:
+        assert cells.shape[1] == 4
+        meshio.write_points_cells(filename, pts, {"tetra": cells})
+
     mesh = Mesh()
     with XDMFFile(filename) as f:
         f.read(mesh)
+    os.remove(filename)
+    os.remove("mesh.h5")
 
     # build Laplace matrix with Dirichlet boundary using dolfin
     V = FunctionSpace(mesh, "Lagrange", 1)
@@ -221,4 +246,5 @@ def get_poisson_steps(pts, cells, tol):
 
 if __name__ == "__main__":
     # disk()
-    rect_with_refinement()
+    # rect_with_refinement()
+    ball()

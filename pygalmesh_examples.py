@@ -23,5 +23,11 @@ def disk(h):
     return mesh.points, mesh.get_cells_type("triangle")
 
 
+def ball(h):
+    s = pygalmesh.Ball([0, 0, 0], 1.0)
+    mesh = pygalmesh.generate_mesh(s, cell_size=h, verbose=False)
+    return mesh.points, mesh.get_cells_type("tetra")
+
+
 if __name__ == "__main__":
     disk(0.1)

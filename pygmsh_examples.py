@@ -36,6 +36,14 @@ def rect_with_refinement(h):
     return mesh.points, mesh.get_cells_type("triangle")
 
 
+def ball(h):
+    with pygmsh.occ.Geometry() as geom:
+        geom.characteristic_length_max = h
+        geom.add_ball([0, 0, 0], 1.0)
+        mesh = geom.generate_mesh()
+    return mesh.points, mesh.get_cells_type("tetra")
+
+
 if __name__ == "__main__":
     import meshio
 
