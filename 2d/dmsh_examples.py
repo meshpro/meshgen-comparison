@@ -17,7 +17,7 @@ def rect_with_refinement(h):
     return dmsh.generate(
         dmsh.Rectangle(-1.0, 1.0, -1.0, 1.0),
         edge_size=lambda x: h + 0.1 * numpy.sqrt(x[0] ** 2 + x[1] ** 2),
-        tol=1.0e-10
+        tol=1.0e-10,
     )
 
 

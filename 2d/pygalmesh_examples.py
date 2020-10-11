@@ -18,7 +18,7 @@ def disk(h):
         # edge_size is the _max_ edge size. Relax it a bit; with 1.5, one gets node/cell
         # numbers comparable to the other mesh generators.
         edge_size=h * 1.5,
-        num_lloyd_steps=0
+        num_lloyd_steps=0,
     )
     return mesh.points, mesh.get_cells_type("triangle")
 

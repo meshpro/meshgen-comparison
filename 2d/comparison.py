@@ -1,40 +1,38 @@
 import time
 
 import dmsh
-import meshpy
-import meshzoo
-import pygalmesh
-import pygmsh
-import SeismicMesh
-
-from dolfin import (
-    Mesh,
-    XDMFFile,
-    TrialFunction,
-    TestFunction,
-    Function,
-    FunctionSpace,
-    inner,
-    grad,
-    Constant,
-    dx,
-    DirichletBC,
-    assemble,
-    KrylovSolver,
-)
+import dmsh_examples
 import dufte
+import matplotlib.pyplot as plt
 import meshio
 import meshplex
-import matplotlib.pyplot as plt
-import numpy
-from rich.progress import Progress
-
-import dmsh_examples
+import meshpy
 import meshpy_examples
+import meshzoo
 import meshzoo_examples
+import numpy
+import pygalmesh
 import pygalmesh_examples
+import pygmsh
 import pygmsh_examples
+import SeismicMesh
 import seismicmesh_examples
+from dolfin import (
+    Constant,
+    DirichletBC,
+    Function,
+    FunctionSpace,
+    KrylovSolver,
+    Mesh,
+    TestFunction,
+    TrialFunction,
+    XDMFFile,
+    assemble,
+    dx,
+    grad,
+    inner,
+)
+from rich.progress import Progress
 
 cat20_colors = [
     ("#1f77b4", "#aec7e8"),
@@ -89,7 +87,7 @@ def create_plots(prefix, functions, H):
     num_poisson_steps = []
     num_points = []
 
-    colors = cat20_colors[:len(functions)]
+    colors = cat20_colors[: len(functions)]
 
     poisson_tol = 1.0e-10
     with Progress() as progress:
@@ -190,8 +188,8 @@ def get_poisson_steps(pts, cells, tol):
 
     # solve(A, x, b, "cg")
     solver = KrylovSolver("cg", "none")
-    solver.parameters['absolute_tolerance'] = 0.0
-    solver.parameters['relative_tolerance'] = tol
+    solver.parameters["absolute_tolerance"] = 0.0
+    solver.parameters["relative_tolerance"] = tol
 
     x = Function(V)
     x_vec = x.vector()
