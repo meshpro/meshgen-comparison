@@ -86,11 +86,11 @@ def ball():
     functions = {
         f"CGAL {pygalmesh.__cgal_version__}": pygalmesh_examples.ball,
         f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples.ball,
-        # f"MeshPy {meshpy.version}": meshpy_examples.rect_with_refinement,
+        f"MeshPy {meshpy.version}": meshpy_examples.ball,
         f"SeismicMesh {SeismicMesh.__version__}": seismicmesh_examples.ball,
     }
     # total runtime:
-    H = numpy.logspace(0.0, -2.1, num=15)
+    H = numpy.logspace(0.0, -1.5, num=15)
 
     create_plots("ball", functions, H)
 
@@ -161,7 +161,7 @@ def create_plots(prefix, functions, H):
         functions.keys(), num_points.T, quality_avg.T, quality_min.T, colors
     ):
         plt.semilogx(num_pts, qa, color=cols[0], linestyle="-", label=f"{name}")
-        plt.semilogx(num_pts, qm, color=cols[1], linestyle="--")
+        plt.semilogx(num_pts, qm, color=cols[1], linestyle="--", label="")
         plt.ylim(0.0, 1.0)
     dufte.legend()
     plt.xlabel("num points")
