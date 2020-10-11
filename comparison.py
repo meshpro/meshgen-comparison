@@ -1,22 +1,16 @@
 import time
 
 import dmsh
-import dmsh_examples
 import dufte
 import matplotlib.pyplot as plt
 import meshio
 import meshplex
 import meshpy
-import meshpy_examples
 import meshzoo
-import meshzoo_examples
 import numpy
 import pygalmesh
-import pygalmesh_examples
 import pygmsh
-import pygmsh_examples
 import SeismicMesh
-import seismicmesh_examples
 from dolfin import (
     Constant,
     DirichletBC,
@@ -33,6 +27,13 @@ from dolfin import (
     inner,
 )
 from rich.progress import Progress
+
+import dmsh_examples
+import meshpy_examples
+import meshzoo_examples
+import pygalmesh_examples
+import pygmsh_examples
+import seismicmesh_examples
 
 cat20_colors = [
     ("#1f77b4", "#aec7e8"),
@@ -71,11 +72,11 @@ def rect_with_refinement():
     functions = {
         f"dmsh {dmsh.__version__}": dmsh_examples.rect_with_refinement,
         f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples.rect_with_refinement,
-        f"MeshPy {meshpy.version}": meshpy_examples.disk,
-        # f"SeismicMesh {SeismicMesh.__version__}": seismicmesh_examples.disk,
+        f"MeshPy {meshpy.version}": meshpy_examples.rect_with_refinement,
+        f"SeismicMesh {SeismicMesh.__version__}": seismicmesh_examples.rect_with_refinement,
     }
     # total runtime:
-    H = numpy.logspace(0.0, -2.1, num=15)  # 299.02s
+    H = numpy.logspace(0.0, -2.1, num=15)
 
     create_plots("rect-with-refinement", functions, H)
 
