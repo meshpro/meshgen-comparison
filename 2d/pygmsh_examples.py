@@ -18,12 +18,14 @@ def disk(h):
 
 def rect_with_refinement(h):
     with pygmsh.geo.Geometry() as geom:
-        geom.add_polygon([
-            [-1.0, -1.0],
-            [+1.0, -1.0],
-            [+1.0, +1.0],
-            [-1.0, +1.0],
-        ])
+        geom.add_polygon(
+            [
+                [-1.0, -1.0],
+                [+1.0, -1.0],
+                [+1.0, +1.0],
+                [-1.0, +1.0],
+            ]
+        )
         geom.set_mesh_size_callback(
             lambda dim, tag, x, y, z: h + 0.1 * math.sqrt(x ** 2 + y ** 2)
         )
