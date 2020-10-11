@@ -70,8 +70,45 @@ def rect_with_refinement(h):
     return numpy.array(mesh.points), numpy.array(mesh.elements)
 
 
+def ball(h):
+    from meshpy.tet import MeshInfo, build
+    from meshpy.geometry import (
+        generate_surface_of_revolution,
+        EXT_OPEN,
+        GeometryBuilder,
+    )
+
+    r = 3
+
+    polar_subdivision = int(math.pi / h)
+    dphi = math.pi / polar_subdivision
+
+    def truncate(val):
+        return 0 if abs(val) < 1e-10 else val
+
+    rz = [
+        [truncate(r * math.sin(i * dphi)), r * math.cos(i * dphi)]
+        for i in range(polar_subdivision + 1)
+    ]
+
+    geob = GeometryBuilder()
+    radial_subdivision = int(2 * math.pi / h)
+    geob.add_geometry(
+        *generate_surface_of_revolution(
+            rz, closure=EXT_OPEN, radial_subdiv=radial_subdivision
+        )
+    )
+
+    mesh_info = MeshInfo()
+    geob.set(mesh_info)
+
+    mesh = build(mesh_info)
+    return numpy.array(mesh.points), numpy.array(mesh.elements)
+
+
 if __name__ == "__main__":
     import meshio
 
-    points, cells = rect_with_refinement(0.1)
-    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
+    # points, cells = rect_with_refinement(0.1)
+    points, cells = ball(0.1)
+    meshio.Mesh(points, {"tetra": cells}).write("out.vtk")
