@@ -1,17 +1,16 @@
 import SeismicMesh
-import numpy
 
 
 def disk(h):
     bbox = (-1.0, 1.0, -1.0, 1.0)
-    circle = SeismicMesh.geometry.Circle(0, 0, 1)
+    disk = SeismicMesh.geometry.Disk(0, 0, 1)
 
     points, cells = SeismicMesh.generate_mesh(
         bbox=bbox,
         h0=h,
-        domain=circle,
-        cell_size=lambda x: numpy.full(len(x), h),
-        # verbose=False
+        domain=disk,
+        edge_length=h,
+        verbose=False
     )
     return points, cells
 

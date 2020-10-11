@@ -5,6 +5,7 @@ import meshpy
 import meshzoo
 import pygalmesh
 import pygmsh
+import SeismicMesh
 
 from dolfin import (
     Mesh,
@@ -56,7 +57,7 @@ def disk():
         f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples.disk,
         f"MeshPy {meshpy.version}": meshpy_examples.disk,
         f"meshzoo {meshzoo.__version__}": meshzoo_examples.disk,
-        "SeismicMesh": seismicmesh_examples.disk,
+        f"SeismicMesh {SeismicMesh.__version__}": seismicmesh_examples.disk,
     }
     # total runtime:
     # H = numpy.logspace(0.0, -1.5, num=15)  #  13.39s
@@ -73,7 +74,7 @@ def rect_with_refinement():
         f"dmsh {dmsh.__version__}": dmsh_examples.rect_with_refinement,
         f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples.rect_with_refinement,
         f"MeshPy {meshpy.version}": meshpy_examples.disk,
-        "SeismicMesh": seismicmesh_examples.disk,
+        # f"SeismicMesh {SeismicMesh.__version__}": seismicmesh_examples.disk,
     }
     # total runtime:
     H = numpy.logspace(0.0, -2.1, num=15)  # 299.02s
