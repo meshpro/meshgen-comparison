@@ -25,9 +25,37 @@ def disk(h):
 
 def ball(h):
     s = pygalmesh.Ball([0, 0, 0], 1.0)
-    mesh = pygalmesh.generate_mesh(s, cell_size=h, verbose=False)
+    # The circumradius of a regular tetrahedron with the given edge_size is
+    # sqrt(3 / 8) * edge_size ~= 0.61 * edge_size. Relax it a bit and just use
+    # edge_size.
+    mesh = pygalmesh.generate_mesh(
+        s,
+        cell_size=h,
+        verbose=False
+    )
+    return mesh.points, mesh.get_cells_type("tetra")
+
+
+def box_with_refinement(h):
+    s = pygalmesh.Cuboid([-1.0, -1.0, -1.0], [1.0, 1.0, 1.0])
+
+    def edge_size(x):
+        return h + 0.1 * numpy.sqrt(x[0] ** 2 + x[1] ** 2 + x[2] ** 2)
+
+    mesh = pygalmesh.generate_mesh(
+        s,
+        edge_size=edge_size,
+        # The actual factor sqrt(3 / 8) leads to cells too small in comparison with
+        # cells near the feature edges. Again, just take edge_size.
+        cell_size=edge_size,
+        verbose=False
+    )
+
     return mesh.points, mesh.get_cells_type("tetra")
 
 
 if __name__ == "__main__":
-    disk(0.1)
+    import meshio
+
+    points, cells = box_with_refinement(0.005)
+    meshio.Mesh(points, {"tetra": cells}).write("out.vtk")

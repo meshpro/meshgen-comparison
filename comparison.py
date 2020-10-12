@@ -95,6 +95,19 @@ def ball():
     create_plots("ball", functions, H)
 
 
+def box_with_refinement():
+    functions = {
+        f"CGAL {pygalmesh.__cgal_version__}": pygalmesh_examples.box_with_refinement,
+        f"Gmsh {pygmsh.__gmsh_version__}": pygmsh_examples.box_with_refinement,
+        # f"MeshPy {meshpy.version}": meshpy_examples.ball,
+        # f"SeismicMesh {SeismicMesh.__version__}": seismicmesh_examples.ball,
+    }
+    # total runtime:
+    H = numpy.logspace(0.0, -1.5, num=15)
+
+    create_plots("box-with-refinement", functions, H)
+
+
 def create_plots(prefix, functions, H):
     times = []
     quality_min = []
@@ -247,4 +260,5 @@ def get_poisson_steps(pts, cells, tol):
 if __name__ == "__main__":
     # disk()
     # rect_with_refinement()
-    ball()
+    # ball()
+    box_with_refinement()

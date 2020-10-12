@@ -44,8 +44,19 @@ def ball(h):
     return mesh.points, mesh.get_cells_type("tetra")
 
 
+def box_with_refinement(h):
+    with pygmsh.geo.Geometry() as geom:
+        geom.add_box(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0)
+        geom.set_mesh_size_callback(
+            lambda dim, tag, x, y, z: h + 0.1 * math.sqrt(x ** 2 + y ** 2 + z ** 2)
+        )
+        mesh = geom.generate_mesh()
+
+    return mesh.points, mesh.get_cells_type("tetra")
+
+
 if __name__ == "__main__":
     import meshio
 
-    points, cells = rect_with_refinement(0.01)
-    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
+    points, cells = box_with_refinement(0.01)
+    meshio.Mesh(points, {"tetra": cells}).write("out.vtk")
