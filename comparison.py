@@ -62,6 +62,13 @@ def ball():
     create_plots("ball", functions, H)
 
 
+def l_shape_3d():
+    functions = [pygalmesh_examples.l_shape_3d, pygmsh_examples.l_shape_3d]
+    # total runtime:
+    H = numpy.logspace(0.0, -1.5, num=15)
+    create_plots("l-shape-3d", functions, H)
+
+
 def box_with_refinement():
     functions = [
         pygalmesh_examples.box_with_refinement,
@@ -75,7 +82,9 @@ def box_with_refinement():
 
 if __name__ == "__main__":
     # disk()
-    l_shape()
+    # l_shape()
     # rect_with_refinement()
     # ball()
     # box_with_refinement()
+    l_shape_3d()
+    # l_shape()

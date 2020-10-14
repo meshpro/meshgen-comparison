@@ -57,6 +57,26 @@ def ball(h):
     return mesh.points, mesh.get_cells_type("tetra")
 
 
+def l_shape_3d(h):
+    b0 = pygalmesh.Cuboid([-1.0, -1.0, -1.0], [1.0, 1.0, 1.0])
+    b1 = pygalmesh.Cuboid([0.0, 0.0, 0.0], [1.1, 1.1, 1.1])
+    u = pygalmesh.Difference(b0, b1)
+    mesh = pygalmesh.generate_mesh(
+        u,
+        max_edge_size_at_feature_edges=h,
+        max_cell_circumradius=h,
+        verbose=False,
+        # TODO sharpen the intersection edges and avoid
+        # [1] 591479 segmentation fault (core dumped) python3 pygalmesh_examples.py
+        # feature_edges=[
+        #     [[1.0, 0.0, z] for z in numpy.linspace(0.0, 1.0, int(1.0 / h))]
+        # ]
+    )
+    mesh.remove_lower_dimensional_cells()
+    mesh.remove_orphaned_nodes()
+    return mesh.points, mesh.get_cells_type("tetra")
+
+
 def box_with_refinement(h):
     s = pygalmesh.Cuboid([-1.0, -1.0, -1.0], [1.0, 1.0, 1.0])
 
@@ -78,5 +98,5 @@ def box_with_refinement(h):
 if __name__ == "__main__":
     import meshio
 
-    points, cells = l_shape(0.1)
-    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
+    points, cells = l_shape_3d(0.1)
+    meshio.Mesh(points, {"tetra": cells}).write("out.vtk")
