@@ -78,14 +78,13 @@ def create_plots(prefix, functions, H, time_limit=60):
             num_poisson_steps.append([])
             num_points.append([])
             progress.update(task2, completed=0)
-            for fun in functions.values():
+            for fun in functions:
                 try:
                     with time_limiter(time_limit):
                         tic = time.time()
                         points, cells = fun(h)
                         toc = time.time()
                 except TimeoutException:
-                    print("Timed out!")
                     times[-1].append(numpy.nan)
                     quality_min[-1].append(numpy.nan)
                     quality_avg[-1].append(numpy.nan)
