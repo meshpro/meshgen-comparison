@@ -13,8 +13,8 @@ def disk(h):
     n_phi = num_boundary_points
     radius = 1.0
 
-    # Choose the maximum area of a triangle equal to the area of
-    # an equilateral triangle on the boundary.
+    # Choose the maximum area of a triangle equal to the area of an equilateral triangle
+    # on the boundary.
     a_boundary = 2 * numpy.pi * radius / n_phi
     max_area = a_boundary ** 2 * numpy.sqrt(3.0) / 4.0
     max_area = float(max_area)  # meshpy can't deal with numpy.float64
@@ -39,6 +39,31 @@ def disk(h):
     meshpy_mesh = meshpy.triangle.build(info, refinement_func=_needs_refinement)
 
     return numpy.array(meshpy_mesh.points), numpy.array(meshpy_mesh.elements)
+
+
+def l_shape(h):
+    points = [
+        [-1.0, -1.0],
+        [+1.0, -1.0],
+        [+1.0, +0.0],
+        [+0.0, +0.0],
+        [+0.0, +1.0],
+        [-1.0, +1.0],
+    ]
+
+    info = meshpy.triangle.MeshInfo()
+    info.set_points(points)
+    info.set_facets(_round_trip_connect(len(points) - 1))
+
+    # Choose the maximum area of a triangle equal to the area of an equilateral triangle
+    # with the edge length h.
+    max_area = math.sqrt(3) / 4 * h ** 2
+    # relax a bit
+    max_area *= 1.5
+
+    mesh = meshpy.triangle.build(info, refinement_func=lambda v, a: a > max_area)
+
+    return numpy.array(mesh.points), numpy.array(mesh.elements)
 
 
 def rect_with_refinement(h):
@@ -71,12 +96,12 @@ def rect_with_refinement(h):
 
 
 def ball(h):
-    from meshpy.tet import MeshInfo, build
     from meshpy.geometry import (
-        generate_surface_of_revolution,
         EXT_OPEN,
         GeometryBuilder,
+        generate_surface_of_revolution,
     )
+    from meshpy.tet import MeshInfo, build
 
     r = 3
 
@@ -109,6 +134,6 @@ def ball(h):
 if __name__ == "__main__":
     import meshio
 
-    # points, cells = rect_with_refinement(0.1)
-    points, cells = ball(0.1)
-    meshio.Mesh(points, {"tetra": cells}).write("out.vtk")
+    points, cells = l_shape(0.1)
+    # points, cells = ball(0.1)
+    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")

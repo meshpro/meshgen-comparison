@@ -21,8 +21,25 @@ def rect_with_refinement(h):
     )
 
 
+def l_shape(h):
+    return dmsh.generate(
+        dmsh.Polygon(
+            [
+                [-1.0, -1.0],
+                [+1.0, -1.0],
+                [+1.0, +0.0],
+                [+0.0, +0.0],
+                [+0.0, +1.0],
+                [-1.0, +1.0],
+            ]
+        ),
+        edge_size=h,
+        tol=1.0e-10,
+    )
+
+
 if __name__ == "__main__":
     import meshio
 
-    points, cells = rect_with_refinement(0.01)
+    points, cells = l_shape(0.1)
     meshio.Mesh(points, {"triangle": cells}).write("out.vtk")

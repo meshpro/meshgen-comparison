@@ -17,6 +17,25 @@ def disk(h):
     return mesh.points, mesh.get_cells_type("triangle")
 
 
+def l_shape(h):
+    with pygmsh.geo.Geometry() as geom:
+        geom.add_polygon(
+            [
+                [-1.0, -1.0],
+                [+1.0, -1.0],
+                [+1.0, +0.0],
+                [+0.0, +0.0],
+                [+0.0, +1.0],
+                [-1.0, +1.0],
+            ],
+            mesh_size=h,
+        )
+        mesh = geom.generate_mesh()
+
+    mesh.prune_z_0()
+    return mesh.points, mesh.get_cells_type("triangle")
+
+
 def rect_with_refinement(h):
     with pygmsh.geo.Geometry() as geom:
         geom.add_polygon(
@@ -58,5 +77,5 @@ def box_with_refinement(h):
 if __name__ == "__main__":
     import meshio
 
-    points, cells = box_with_refinement(0.01)
-    meshio.Mesh(points, {"tetra": cells}).write("out.vtk")
+    points, cells = l_shape(0.1)
+    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")

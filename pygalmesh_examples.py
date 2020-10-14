@@ -15,9 +15,33 @@ def disk(h):
     mesh = pygalmesh.generate_2d(
         points,
         constraints,
-        # edge_size is the _max_ edge size. Relax it a bit; with 1.5, one gets node/cell
-        # numbers comparable to the other mesh generators.
-        edge_size=h * 1.5,
+        # Relax max_edge size a bit; with 1.5, one gets node/cell numbers comparable to
+        # the other mesh generators.
+        max_edge_size=h * 1.5,
+        num_lloyd_steps=0,
+    )
+    return mesh.points, mesh.get_cells_type("triangle")
+
+
+def l_shape(h):
+    points = numpy.array(
+        [
+            [-1.0, -1.0],
+            [+1.0, -1.0],
+            [+1.0, +0.0],
+            [+0.0, +0.0],
+            [+0.0, +1.0],
+            [-1.0, +1.0],
+        ]
+    )
+    n = len(points) - 1
+    constraints = [[k, k + 1] for k in range(n)] + [[n, 0]]
+    mesh = pygalmesh.generate_2d(
+        points,
+        constraints,
+        # Relax max_edge size a bit; with 1.5, one gets node/cell numbers comparable to
+        # the other mesh generators.
+        max_edge_size=h * 1.5,
         num_lloyd_steps=0,
     )
     return mesh.points, mesh.get_cells_type("triangle")
@@ -25,30 +49,25 @@ def disk(h):
 
 def ball(h):
     s = pygalmesh.Ball([0, 0, 0], 1.0)
-    # The circumradius of a regular tetrahedron with the given edge_size is
-    # sqrt(3 / 8) * edge_size ~= 0.61 * edge_size. Relax it a bit and just use
-    # edge_size.
-    mesh = pygalmesh.generate_mesh(
-        s,
-        cell_size=h,
-        verbose=False
-    )
+    # The circumradius of a regular tetrahedron with the given edge_size is sqrt(3 / 8)
+    # * edge_size ~= 0.61 * edge_size. Relax it a bit and just use h.
+    mesh = pygalmesh.generate_mesh(s, max_cell_circumradius=h, verbose=False)
     return mesh.points, mesh.get_cells_type("tetra")
 
 
 def box_with_refinement(h):
     s = pygalmesh.Cuboid([-1.0, -1.0, -1.0], [1.0, 1.0, 1.0])
 
-    def edge_size(x):
+    def edge_length(x):
         return h + 0.1 * numpy.sqrt(x[0] ** 2 + x[1] ** 2 + x[2] ** 2)
 
     mesh = pygalmesh.generate_mesh(
         s,
-        edge_size=edge_size,
+        max_edge_size_at_feature_edges=h,
         # The actual factor sqrt(3 / 8) leads to cells too small in comparison with
         # cells near the feature edges. Again, just take edge_size.
-        cell_size=edge_size,
-        verbose=False
+        max_cell_circumradius=edge_length,
+        verbose=False,
     )
 
     return mesh.points, mesh.get_cells_type("tetra")
@@ -57,5 +76,5 @@ def box_with_refinement(h):
 if __name__ == "__main__":
     import meshio
 
-    points, cells = box_with_refinement(0.005)
-    meshio.Mesh(points, {"tetra": cells}).write("out.vtk")
+    points, cells = l_shape(0.1)
+    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
