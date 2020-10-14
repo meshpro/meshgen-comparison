@@ -81,10 +81,10 @@ def box_with_refinement():
 
 
 if __name__ == "__main__":
-    # disk()
+    disk()
     # l_shape()
     # rect_with_refinement()
     # ball()
     # box_with_refinement()
-    l_shape_3d()
+    # l_shape_3d()
     # l_shape()

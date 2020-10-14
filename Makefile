@@ -1,5 +1,5 @@
 clean:
-	@find . | grep -E "(__pycache__|\.pyc|\.pyo$\)" | xargs rm -rf
+	@find . | grep -E "(__pycache__|\.pyc|\.pyo|\.vtu$\)" | xargs rm -rf
 	@rm -rf *.egg-info/ build/ dist/
 
 format:

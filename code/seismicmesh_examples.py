@@ -6,10 +6,10 @@ desc = f"SeismicMesh {SeismicMesh.__version__}"
 
 def disk(h):
     bbox = (-1.0, 1.0, -1.0, 1.0)
-    domain = SeismicMesh.geometry.Disk(0, 0, 1)
+    domain = SeismicMesh.geometry.Disk([0.0, 0.0], 1.0)
 
     points, cells = SeismicMesh.generate_mesh(
-        bbox=bbox, h0=h, domain=domain, edge_length=h
+        bbox=bbox, h0=h, domain=domain, edge_length=h, verbose=0
     )
     return points, cells
 
