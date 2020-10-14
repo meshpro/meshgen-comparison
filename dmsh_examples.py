@@ -1,6 +1,8 @@
 import dmsh
 import numpy
 
+desc = f"dmsh {dmsh.__version__}"
+
 
 def disk(h):
     geo = dmsh.Circle([0.0, 0.0], 1.0)

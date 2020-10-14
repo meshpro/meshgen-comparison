@@ -2,6 +2,8 @@ import math
 
 import pygmsh
 
+desc = f"Gmsh {pygmsh.__gmsh_version__}"
+
 
 def disk(h):
     with pygmsh.geo.Geometry() as geom:

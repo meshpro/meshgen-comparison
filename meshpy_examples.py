@@ -3,6 +3,8 @@ import math
 import meshpy.triangle
 import numpy
 
+desc = f"MeshPy {meshpy.version}"
+
 
 def _round_trip_connect(end):
     return [[i, i + 1] for i in range(end)] + [[end, 0]]

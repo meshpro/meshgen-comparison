@@ -1,6 +1,8 @@
 import numpy
 import pygalmesh
 
+desc = f"CGAL {pygalmesh.__cgal_version__}"
+
 
 # CGAL may produce bad-quality meshes, see <https://github.com/CGAL/cgal/issues/5068>.
 def disk(h):

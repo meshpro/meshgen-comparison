@@ -1,5 +1,7 @@
 import meshzoo
 
+desc = f"meshzoo {meshzoo.__version__}"
+
 
 def disk(h):
     # tighten a bit

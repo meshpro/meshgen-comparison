@@ -1,3 +1,4 @@
+import inspect
 import os
 import signal
 import time
@@ -117,9 +118,11 @@ def create_plots(prefix, functions, H, time_limit=60):
     num_poisson_steps = numpy.array(num_poisson_steps)
     num_points = numpy.array(num_points)
 
+    names = [inspect.getmodule(fun).desc for fun in functions]
+
     # plot the data
     plt.style.use(dufte.style)
-    for name, num_pts, t, cols in zip(functions.keys(), num_points.T, times.T, colors):
+    for name, num_pts, t, cols in zip(names, num_points.T, times.T, colors):
         plt.loglog(num_pts, t, color=cols[0], label=name)
     dufte.legend()
     plt.xlabel("num points")
@@ -129,7 +132,7 @@ def create_plots(prefix, functions, H, time_limit=60):
     plt.close()
 
     for name, num_pts, qa, qm, cols in zip(
-        functions.keys(), num_points.T, quality_avg.T, quality_min.T, colors
+        names, num_points.T, quality_avg.T, quality_min.T, colors
     ):
         plt.semilogx(num_pts, qa, color=cols[0], linestyle="-", label=f"{name}")
         plt.semilogx(num_pts, qm, color=cols[1], linestyle="--", label="")
@@ -142,7 +145,7 @@ def create_plots(prefix, functions, H, time_limit=60):
     plt.close()
 
     for name, num_pts, np, cols in zip(
-        functions.keys(), num_points.T, num_poisson_steps.T, colors
+        names, num_points.T, num_poisson_steps.T, colors
     ):
         plt.semilogx(num_pts, np, color=cols[0], label=f"{name}")
     dufte.legend()

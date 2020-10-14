@@ -1,6 +1,8 @@
 import numpy
 import SeismicMesh
 
+desc = f"SeismicMesh {SeismicMesh.__version__}"
+
 
 def disk(h):
     bbox = (-1.0, 1.0, -1.0, 1.0)
