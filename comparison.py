@@ -1,15 +1,16 @@
 import numpy
 
-import dmsh_examples
-import meshpy_examples
-import meshzoo_examples
-import pygalmesh_examples
-import pygmsh_examples
-import seismicmesh_examples
-from main import create_plots
+from meshgen_comparison import dmsh_examples
+from meshgen_comparison import meshpy_examples
+from meshgen_comparison import meshzoo_examples
+from meshgen_comparison import pygalmesh_examples
+from meshgen_comparison import pygmsh_examples
+from meshgen_comparison import seismicmesh_examples
+from meshgen_comparison.main import create_plots
 
 
 def disk():
+    print("Disk:")
     functions = [
         pygalmesh_examples.disk,
         dmsh_examples.disk,
@@ -28,6 +29,7 @@ def disk():
 
 
 def l_shape():
+    print("L-shape:")
     functions = [
         pygalmesh_examples.l_shape,
         dmsh_examples.l_shape,
@@ -39,6 +41,7 @@ def l_shape():
 
 
 def rect_with_refinement():
+    print("Rectangle with refinement:")
     functions = [
         dmsh_examples.rect_with_refinement,
         pygmsh_examples.rect_with_refinement,
@@ -51,6 +54,7 @@ def rect_with_refinement():
 
 
 def ball():
+    print("Ball:")
     functions = [
         pygalmesh_examples.ball,
         pygmsh_examples.ball,
@@ -63,6 +67,7 @@ def ball():
 
 
 def l_shape_3d():
+    print("L-shape in 3D:")
     functions = [pygalmesh_examples.l_shape_3d, pygmsh_examples.l_shape_3d]
     # total runtime:
     H = numpy.logspace(0.0, -1.5, num=15)
@@ -70,6 +75,8 @@ def l_shape_3d():
 
 
 def box_with_refinement():
+    print("Box with refinement:")
+    functions = [pygalmesh_examples.l_shape_3d, pygmsh_examples.l_shape_3d]
     functions = [
         pygalmesh_examples.box_with_refinement,
         pygmsh_examples.box_with_refinement,
@@ -82,9 +89,8 @@ def box_with_refinement():
 
 if __name__ == "__main__":
     disk()
-    # l_shape()
-    # rect_with_refinement()
-    # ball()
-    # box_with_refinement()
-    # l_shape_3d()
-    # l_shape()
+    l_shape()
+    rect_with_refinement()
+    ball()
+    l_shape_3d()
+    box_with_refinement()
