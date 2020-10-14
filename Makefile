@@ -1,5 +1,11 @@
+default:
+	@echo "make run?"
+
+run:
+	python3 meshgen_comparison/run.py
+
 clean:
-	@find . -name "*.bak" -o -name "__pycache__" -o -name "*.pyc" -o -name "*.pyo" -o -name "*.vtk" -delete
+	@find . -name "*.bak" -o -name "__pycache__" -o -name "*.pyc" -o -name "*.pyo" -o -name "*.vtk" -o -name "*.svg" -delete
 	@rm -rf *.egg-info/ build/ dist/
 
 format:
