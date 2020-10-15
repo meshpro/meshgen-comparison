@@ -17,10 +17,10 @@ For each domain and mesh generator (if applicable), the repostory shows the foll
 
 ### Disk
 
-blank | <img src="https://nschloe.github.io/meshgen-comparison/disk-times.svg" width="100%"> |
+blank | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/disk-times.svg?raw=true) |
 :-------------:|:-----------------:|
 Example mesh   |  Generation time  |
-| <img src="https://nschloe.github.io/meshgen-comparison/disk-quality.svg" width="100%"> |<img src="https://nschloe.github.io/meshgen-comparison/disk-poisson.svg" width="100%"> |
+| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/disk-times.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/disk-poisson.svg?raw=true)
 Cell quality   |  Poisson CG steps  |
 
 
