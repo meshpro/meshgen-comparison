@@ -1,7 +1,8 @@
 import numpy
 import pygalmesh
 
-desc = f"CGAL {pygalmesh.__cgal_version__}"
+desc = f"CGAL {pygalmesh.__cgal_version__} (via pygalmesh {pygalmesh.__version__})"
+colors = ("#d62728", "#ff9896")
 
 
 # CGAL may produce bad-quality meshes, see <https://github.com/CGAL/cgal/issues/5068>.

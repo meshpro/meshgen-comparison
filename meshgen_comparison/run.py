@@ -1,11 +1,13 @@
 import numpy
 
-from meshgen_comparison import dmsh_examples
-from meshgen_comparison import meshpy_examples
-from meshgen_comparison import meshzoo_examples
-from meshgen_comparison import pygalmesh_examples
-from meshgen_comparison import pygmsh_examples
-from meshgen_comparison import seismicmesh_examples
+from meshgen_comparison import (
+    dmsh_examples,
+    meshpy_examples,
+    meshzoo_examples,
+    pygalmesh_examples,
+    pygmsh_examples,
+    seismicmesh_examples,
+)
 from meshgen_comparison.main import create_plots
 
 

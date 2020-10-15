@@ -26,18 +26,13 @@ from dolfin import (
 )
 from rich.progress import Progress
 
-cat20_colors = [
-    ("#1f77b4", "#aec7e8"),
-    ("#ff7f0e", "#ffbb78"),
-    ("#2ca02c", "#98df8a"),
-    ("#d62728", "#ff9896"),
-    ("#9467bd", "#c5b0d5"),
-    ("#8c564b", "#c49c94"),
-    ("#e377c2", "#f7b6d2"),
-    ("#7f7f7f", "#c7c7c7"),
-    ("#bcbd22", "#dbdb8d"),
-    ("#17becf", "#9edae5"),
-]
+# Some more colors:
+# cat20_colors = [
+#     ("#e377c2", "#f7b6d2"),
+#     ("#7f7f7f", "#c7c7c7"),
+#     ("#bcbd22", "#dbdb8d"),
+#     ("#17becf", "#9edae5"),
+# ]
 
 
 # https://stackoverflow.com/a/601168/353337
@@ -64,8 +59,6 @@ def create_plots(prefix, functions, H, time_limit=60):
     quality_avg = []
     num_poisson_steps = []
     num_points = []
-
-    colors = cat20_colors[: len(functions)]
 
     poisson_tol = 1.0e-10
     with Progress() as progress:
@@ -118,6 +111,7 @@ def create_plots(prefix, functions, H, time_limit=60):
     num_points = numpy.array(num_points)
 
     names = [inspect.getmodule(fun).desc for fun in functions]
+    colors = [inspect.getmodule(fun).colors for fun in functions]
 
     # plot the data
     plt.style.use(dufte.style)

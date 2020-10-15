@@ -2,6 +2,7 @@ import dmsh
 import numpy
 
 desc = f"dmsh {dmsh.__version__}"
+colors = ("#1f77b4", "#aec7e8")
 
 
 def disk(h):

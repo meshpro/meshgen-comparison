@@ -4,6 +4,7 @@ import meshpy.triangle
 import numpy
 
 desc = f"MeshPy {meshpy.version}"
+colors = ("#ff7f0e", "#ffbb78")
 
 
 def _round_trip_connect(end):
