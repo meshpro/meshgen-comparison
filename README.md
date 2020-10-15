@@ -35,10 +35,10 @@ Cell quality   |  Poisson CG steps  |
 
 ### Rectangle with refinement
 
-blank | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rectangle-with-refinement-times.svg?raw=true) |
+blank | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-times.svg?raw=true) |
 :-------------:|:-----------------:|
 Example mesh   |  Generation time  |
-| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rectangle-with-refinement-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rectangle-with-refinement-poisson.svg?raw=true)
+| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-poisson.svg?raw=true)
 Cell quality   |  Poisson CG steps  |
 
 ### Ball
