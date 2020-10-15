@@ -53,12 +53,15 @@ def time_limiter(seconds):
         signal.alarm(0)
 
 
-def create_plots(prefix, functions, H, time_limit=60):
+def create_plots(prefix, functions, H, time_limit=10):
     times = []
     quality_min = []
     quality_avg = []
     num_poisson_steps = []
     num_points = []
+
+    names = [inspect.getmodule(fun).desc for fun in functions]
+    timed_out_at = {name: numpy.nan for name in names}
 
     poisson_tol = 1.0e-10
     with Progress() as progress:
@@ -71,13 +74,25 @@ def create_plots(prefix, functions, H, time_limit=60):
             num_poisson_steps.append([])
             num_points.append([])
             progress.update(task2, completed=0)
-            for fun in functions:
+            for name, fun in zip(names, functions):
+                if h < timed_out_at[name]:
+                    # don't bother if the function already timed out with a smaller h
+                    times[-1].append(numpy.nan)
+                    quality_min[-1].append(numpy.nan)
+                    quality_avg[-1].append(numpy.nan)
+                    num_points[-1].append(numpy.nan)
+                    num_poisson_steps[-1].append(numpy.nan)
+                    progress.update(task2, advance=1)
+                    continue
+
                 try:
                     with time_limiter(time_limit):
                         tic = time.time()
                         points, cells = fun(h)
                         toc = time.time()
                 except TimeoutException:
+                    print("Timeout!", name, h)
+                    timed_out_at[name] = h
                     times[-1].append(numpy.nan)
                     quality_min[-1].append(numpy.nan)
                     quality_avg[-1].append(numpy.nan)
@@ -110,7 +125,6 @@ def create_plots(prefix, functions, H, time_limit=60):
     num_poisson_steps = numpy.array(num_poisson_steps)
     num_points = numpy.array(num_points)
 
-    names = [inspect.getmodule(fun).desc for fun in functions]
     colors = [inspect.getmodule(fun).colors for fun in functions]
 
     # plot the data

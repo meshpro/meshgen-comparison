@@ -64,7 +64,7 @@ def ball():
         seismicmesh_examples.ball,
     ]
     # total runtime:
-    H = numpy.logspace(0.0, -1.5, num=15)
+    H = numpy.logspace(-1.0, -2.5, num=15)
     create_plots("ball", functions, H)
 
 
@@ -90,9 +90,9 @@ def box_with_refinement():
 
 
 if __name__ == "__main__":
-    disk()
-    l_shape()
-    rect_with_refinement()
+    # disk()
+    # l_shape()
+    # rect_with_refinement()
     ball()
-    l_shape_3d()
-    box_with_refinement()
+    # l_shape_3d()
+    # box_with_refinement()
