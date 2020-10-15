@@ -52,3 +52,6 @@ For each domain and mesh generator (if applicable), the repostory shows the foll
 <img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-times.svg?raw=true) |
 :-------------:|:-----------------:|
 | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-poisson.svg?raw=true)
+
+### License
+This software is published under the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html).
