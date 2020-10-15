@@ -19,9 +19,7 @@ For each domain and mesh generator (if applicable), the repostory shows the foll
 
 <img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/disk-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/disk-times.svg?raw=true) |
 :-------------:|:-----------------:|
-Example mesh   |  Generation time  |
 | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/disk-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/disk-poisson.svg?raw=true)
-Cell quality   |  Poisson CG steps  |
 
 
 ### L-shape
@@ -54,7 +52,7 @@ Cell quality   |  Poisson CG steps  |
 blank | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-times.svg?raw=true) |
 :-------------:|:-----------------:|
 Example mesh   |  Generation time  |
-| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d--poisson.svg?raw=true)
+| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-poisson.svg?raw=true)
 Cell quality   |  Poisson CG steps  |
 
 ### Box with refinement
