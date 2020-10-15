@@ -26,39 +26,29 @@ For each domain and mesh generator (if applicable), the repostory shows the foll
 
 <img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-times.svg?raw=true) |
 :-------------:|:-----------------:|
-Example mesh   |  Generation time  |
 | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-poisson.svg?raw=true)
-Cell quality   |  Poisson CG steps  |
 
 
 ### Rectangle with refinement
 
 <img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-times.svg?raw=true) |
 :-------------:|:-----------------:|
-Example mesh   |  Generation time  |
 | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-poisson.svg?raw=true)
-Cell quality   |  Poisson CG steps  |
 
 ### Ball
 
 <img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/ball-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/ball-times.svg?raw=true) |
 :-------------:|:-----------------:|
-Example mesh   |  Generation time  |
 | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/ball-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/ball-poisson.svg?raw=true)
-Cell quality   |  Poisson CG steps  |
 
 ### L-shape in 3D
 
 <img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-times.svg?raw=true) |
 :-------------:|:-----------------:|
-Example mesh   |  Generation time  |
 | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-poisson.svg?raw=true)
-Cell quality   |  Poisson CG steps  |
 
 ### Box with refinement
 
 <img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-times.svg?raw=true) |
 :-------------:|:-----------------:|
-Example mesh   |  Generation time  |
 | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-poisson.svg?raw=true)
-Cell quality   |  Poisson CG steps  |
