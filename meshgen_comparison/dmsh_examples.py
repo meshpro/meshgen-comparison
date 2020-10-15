@@ -44,5 +44,5 @@ def l_shape(h):
 if __name__ == "__main__":
     import meshio
 
-    points, cells = l_shape(0.1)
+    points, cells = disk(0.1)
     meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
