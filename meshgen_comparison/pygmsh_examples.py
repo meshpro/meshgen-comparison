@@ -91,5 +91,8 @@ def box_with_refinement(h):
 if __name__ == "__main__":
     import meshio
 
-    points, cells = l_shape_3d(0.1)
+    # points, cells = l_shape(0.1)
+    # points, cells = rect_with_refinement(0.01)
+    # points, cells = l_shape_3d(0.1)
+    points, cells = box_with_refinement(0.01)
     meshio.Mesh(points, {"tetra": cells}).write("out.vtk")

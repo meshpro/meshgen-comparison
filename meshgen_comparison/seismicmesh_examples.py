@@ -68,6 +68,6 @@ if __name__ == "__main__":
     import meshio
 
     # points, cells = rect_with_refinement(0.1)
-    # points, cells = ball(0.1)
-    points, cells = box_with_refinement(0.1)
+    points, cells = ball(0.1)
+    # points, cells = box_with_refinement(0.1)
     meshio.Mesh(points, {"tetra": cells}).write("out.vtk")
