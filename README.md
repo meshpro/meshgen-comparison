@@ -21,7 +21,6 @@ blank | <img src="https://nschloe.github.io/meshgen-comparison/disk-times.svg" w
 :-------------:|:-----------------:|
 Example mesh   |  Generation time  |
 | <img src="https://nschloe.github.io/meshgen-comparison/disk-quality.svg" width="100%"> |<img src="https://nschloe.github.io/meshgen-comparison/disk-poisson.svg" width="100%"> |
-:-------------:|:------------------:|
 Cell quality   |  Poisson CG steps  |
 
 
