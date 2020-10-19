@@ -6,6 +6,7 @@ import signal
 import time
 import timeit
 from contextlib import contextmanager
+from pathlib import Path
 
 import dufte
 import matplotlib.pyplot as plt
@@ -109,10 +110,37 @@ def compute(fun, h):
     }
 
 
+def update_data_files():
+    for module in modules:
+        name = module.packages[0][0]
+        print(name)
+
+        # check if the existing data is up-to-date
+        json_filename = name.lower() + ".json"
+        if Path(json_filename).is_file():
+            with open(json_filename) as f:
+                data = json.load(f)
+            data_packages = [tuple(p) for p in data["packages"]]
+            if set(module.packages) == set(data_packages):
+                print(f"{json_filename} up to date.")
+                print()
+                continue
+
+        # skip if computed before
+        data = create_data(module)
+        # store data in files
+        with open(name.lower() + ".json", "w") as f:
+            now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+            json.dump(
+                {"name": name, "date": now, "packages": module.packages, "data": data},
+                f,
+                indent=2,
+            )
+        print()
+
+
 def create_data(module, time_limit=60):
     name = module.packages[0][0]
-    print(name)
-
     # collect functions
     functions_h = []
     for domain, H in domains_h:
@@ -153,21 +181,7 @@ def create_data(module, time_limit=60):
                 data[fun.__name__]["axpy_time"].append(_measure_axpy(vals["num_nodes"]))
                 progress.update(task1, advance=1)
             progress.update(task0, advance=1)
-
-    # store data in files
-    with open(name.lower() + ".json", "w") as f:
-        json.dump(
-            {
-                "name": name,
-                "date": datetime.datetime.utcnow().replace(microsecond=0).isoformat(),
-                "packages": module.packages,
-                "data": data,
-            },
-            f,
-            indent=2,
-        )
-
-    print()
+    return name, data
 
 
 def _measure_axpy(n):
@@ -279,5 +293,4 @@ def get_poisson_steps(pts, cells, tol):
 
 
 if __name__ == "__main__":
-    for module in modules:
-        create_data(module)
+    update_data_files()

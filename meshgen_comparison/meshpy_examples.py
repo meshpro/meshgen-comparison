@@ -1,5 +1,6 @@
 import math
 
+import meshio
 import meshpy.triangle
 import numpy
 
@@ -131,12 +132,15 @@ def ball(h):
     geob.set(mesh_info)
 
     mesh = build(mesh_info)
-    return numpy.array(mesh.points), numpy.array(mesh.elements)
+
+    # remove orphaned nodes
+    mesh = meshio.Mesh(numpy.array(mesh.points), {"tetra": numpy.array(mesh.elements)})
+    mesh.remove_orphaned_nodes()
+
+    return mesh.points, mesh.get_cells_type("tetra")
 
 
 if __name__ == "__main__":
-    import meshio
-
     points, cells = l_shape(0.1)
     # points, cells = ball(0.1)
     meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
