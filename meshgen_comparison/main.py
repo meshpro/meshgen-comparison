@@ -27,6 +27,15 @@ from dolfin import (
 )
 from rich.progress import Progress
 
+from meshgen_comparison import (
+    dmsh_examples,
+    meshpy_examples,
+    meshzoo_examples,
+    pygalmesh_examples,
+    pygmsh_examples,
+    seismicmesh_examples,
+)
+
 # Some more colors:
 # cat20_colors = [
 #     ("#e377c2", "#f7b6d2"),
@@ -34,6 +43,23 @@ from rich.progress import Progress
 #     ("#bcbd22", "#dbdb8d"),
 #     ("#17becf", "#9edae5"),
 # ]
+
+modules = [
+    dmsh_examples,
+    meshpy_examples,
+    meshzoo_examples,
+    pygalmesh_examples,
+    pygmsh_examples,
+    seismicmesh_examples,
+]
+domains_h = [
+    ("disk", numpy.logspace(0.0, -2.1, num=15)),  # 299.02s
+    ("l_shape", numpy.logspace(0.0, -2.0, num=15)),
+    ("rect_with_refinement", numpy.logspace(0.0, -3.0, num=15)),
+    ("ball", numpy.logspace(-1.0, -3.0, num=15)),
+    ("l_shape_3d", numpy.logspace(0.0, -1.5, num=15)),
+    ("box_with_refinement", numpy.logspace(0.0, -2.0, num=15)),
+]
 
 
 # https://stackoverflow.com/a/601168/353337
@@ -54,7 +80,7 @@ def time_limiter(seconds):
         signal.alarm(0)
 
 
-def compute(name, fun, h):
+def compute(fun, h):
     tic = time.time()
     points, cells = fun(h)
     toc = time.time()
@@ -80,34 +106,42 @@ def compute(name, fun, h):
     )
 
 
-def create_data(domain, functions, H, time_limit=60):
-    names = [inspect.getmodule(fun).packages[0][0].tolower() for fun in functions]
-    keys = ["h", "time", "quality_min", "quality_avg", "num_nodes", "num_poisson_steps"]
-    data = {name: {key: [] for key in keys} for name in names}
+def create_data(module, time_limit=60):
+    name = module.packages[0][0]
+    print(name)
 
+    keys = ["h", "time", "quality_min", "quality_avg", "num_nodes", "num_poisson_steps"]
     with Progress() as progress:
-        task1 = progress.add_task("Functions", total=len(functions))
-        task2 = progress.add_task("h", total=len(H))
-        for name, fun in zip(names, functions):
-            progress.update(task2, completed=0)
+        task0 = progress.add_task("domains", total=len(domains_h))
+        task1 = progress.add_task("h")
+        data = {domain: {key: [] for key in keys} for domain, _ in domains_h}
+        for domain, H in domains_h:
+            progress.update(task1, total=len(H))
+            progress.reset(task1)
+            try:
+                fun = getattr(module, domain)
+            except AttributeError:
+                continue
+
             for h in H:
                 try:
                     with time_limiter(time_limit):
-                        vals = compute(name, fun, h)
+                        vals = compute(fun, h)
                 except TimeoutException:
                     print("Timeout!", name, h)
                     break
                 assert len(keys[1:]) == len(vals)
                 for key, val in zip(keys[1:], vals):
-                    data[name][key].append(val)
-                data[name]["h"].append(h)
-                progress.update(task2, advance=1)
-            progress.update(task1, advance=1)
+                    data[domain][key].append(val)
+                data[domain]["h"].append(h)
+                progress.update(task1, advance=1)
+            progress.update(task0, advance=1)
+
+    print()
 
     # store data in files
     with open(domain + ".json", "w") as f:
         json.dump(data, f, indent=2)
-    exit(1)
 
 
 def create_plots():
@@ -209,3 +243,8 @@ def get_poisson_steps(pts, cells, tol):
     # out = pykry.gmres(A, b)
     # num_steps = len(out.resnorms)
     return num_steps
+
+
+if __name__ == "__main__":
+    for module in modules:
+        create_data(module)
