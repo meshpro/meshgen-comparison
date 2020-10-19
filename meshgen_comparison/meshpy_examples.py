@@ -5,7 +5,7 @@ import meshpy.triangle
 import numpy
 
 packages = [("MeshPy", meshpy.version)]
-colors = ("#ff7f0e", "#ffbb78")
+colors = ("#1f77b4", "#aec7e8")  # cat20 blue
 
 
 def _round_trip_connect(end):

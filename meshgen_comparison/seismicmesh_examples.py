@@ -2,7 +2,7 @@ import numpy
 import SeismicMesh
 
 packages = [("SeismicMesh", SeismicMesh.__version__)]
-colors = ("#8c564b", "#c49c94")
+colors = ("#9467bd", "#c5b0d5")  # cat20 purple
 
 
 def disk(h):

@@ -6,7 +6,7 @@ packages = [
     ("Gmsh", pygmsh.__gmsh_version__),
     ("pygmsh", pygmsh.__version__),
 ]
-colors = ("#9467bd", "#c5b0d5")
+colors = ("#d62728", "#ff9896")  # cat20 red
 
 
 def disk(h):

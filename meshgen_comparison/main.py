@@ -41,10 +41,16 @@ from meshgen_comparison import (
 
 # Some more colors:
 # cat20_colors = [
-#     ("#e377c2", "#f7b6d2"),
-#     ("#7f7f7f", "#c7c7c7"),
-#     ("#bcbd22", "#dbdb8d"),
-#     ("#17becf", "#9edae5"),
+# colors = ("#1f77b4", "#aec7e8")  # cat20 blue
+# colors = ("#ff7f0e", "#ffbb78")  # cat20 orange
+# colors = ("#2ca02c", "#98df8a")  # cat20 green
+# colors = ("#d62728", "#ff9896")  # cat20 red
+# colors = ("#9467bd", "#c5b0d5")  # cat20 purple
+# colors = ("#8c564b", "#c49c94")  # cat20 brown
+#     ("#e377c2", "#f7b6d2"),  # pink
+#     ("#7f7f7f", "#c7c7c7"),  # gray
+#     ("#bcbd22", "#dbdb8d"),  # yellow
+#     ("#17becf", "#9edae5"),  # light blue  # gmsh?
 # ]
 
 modules = [
@@ -56,12 +62,12 @@ modules = [
     seismicmesh_examples,
 ]
 domains_h = [
-    ("disk", numpy.logspace(0.0, -2.1, num=15)),  # 299.02s
-    ("l_shape", numpy.logspace(0.0, -2.0, num=15)),
-    ("rect_with_refinement", numpy.logspace(0.0, -3.0, num=15)),
+    ("disk", numpy.logspace(-1.0, -2.1, num=15)),
+    ("l_shape", numpy.logspace(-1.0, -2.1, num=15)),
+    ("rect_with_refinement", numpy.logspace(-1.0, -3.0, num=15)),
     ("ball", numpy.logspace(-1.0, -3.0, num=15)),
-    ("l_shape_3d", numpy.logspace(0.0, -1.5, num=15)),
-    ("box_with_refinement", numpy.logspace(0.0, -2.0, num=15)),
+    ("l_shape_3d", numpy.logspace(-1.0, -2.0, num=15)),
+    ("box_with_refinement", numpy.logspace(-1.0, -2.0, num=15)),
 ]
 
 

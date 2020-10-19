@@ -5,7 +5,7 @@ packages = [
     ("CGAL", pygalmesh.__cgal_version__),
     ("pygalmesh", pygalmesh.__version__),
 ]
-colors = ("#d62728", "#ff9896")
+colors = ("#ff7f0e", "#ffbb78")  # cat20 orange
 
 
 # CGAL may produce bad-quality meshes, see <https://github.com/CGAL/cgal/issues/5068>.

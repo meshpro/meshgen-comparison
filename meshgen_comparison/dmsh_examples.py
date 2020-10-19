@@ -2,7 +2,7 @@ import dmsh
 import numpy
 
 packages = [("dmsh", dmsh.__version__)]
-colors = ("#1f77b4", "#aec7e8")
+colors = ("#2ca02c", "#98df8a")  # cat20 green
 
 
 def disk(h):

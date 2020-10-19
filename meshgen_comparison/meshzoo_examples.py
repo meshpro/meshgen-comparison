@@ -1,7 +1,7 @@
 import meshzoo
 
 packages = [("meshzoo", meshzoo.__version__)]
-colors = ("#2ca02c", "#98df8a")
+colors = ("#8c564b", "#c49c94")  # cat20 brown
 
 
 def disk(h):
