@@ -2,7 +2,10 @@ import math
 
 import pygmsh
 
-desc = f"Gmsh {pygmsh.__gmsh_version__} (via pygmsh {pygmsh.__version__})"
+packages = [
+    ("Gmsh", pygmsh.__gmsh_version__),
+    ("pygmsh", pygmsh.__version__),
+]
 colors = ("#9467bd", "#c5b0d5")
 
 

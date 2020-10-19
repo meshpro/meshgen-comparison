@@ -1,4 +1,5 @@
 import inspect
+import json
 import os
 import signal
 import time
@@ -53,78 +54,63 @@ def time_limiter(seconds):
         signal.alarm(0)
 
 
-def create_plots(prefix, functions, H, time_limit=10):
-    times = []
-    quality_min = []
-    quality_avg = []
-    num_poisson_steps = []
-    num_points = []
+def compute(name, fun, h):
+    tic = time.time()
+    points, cells = fun(h)
+    toc = time.time()
 
-    names = [inspect.getmodule(fun).desc for fun in functions]
-    timed_out_at = {name: numpy.nan for name in names}
+    if cells.shape[1] == 3:
+        mesh = meshplex.MeshTri(points, cells)
+    else:
+        assert cells.shape[1] == 4
+        mesh = meshplex.MeshTetra(points, cells)
 
-    poisson_tol = 1.0e-10
+    if numpy.min(mesh.q_radius_ratio) < 1.0e-5:
+        num_poisson_steps = numpy.nan
+    else:
+        poisson_tol = 1.0e-10
+        num_poisson_steps = get_poisson_steps(points, cells, poisson_tol)
+
+    return (
+        toc - tic,
+        numpy.min(mesh.q_radius_ratio),
+        numpy.average(mesh.q_radius_ratio),
+        mesh.node_coords.shape[0],
+        num_poisson_steps,
+    )
+
+
+def create_data(domain, functions, H, time_limit=60):
+    names = [inspect.getmodule(fun).packages[0][0].tolower() for fun in functions]
+    keys = ["h", "time", "quality_min", "quality_avg", "num_nodes", "num_poisson_steps"]
+    data = {name: {key: [] for key in keys} for name in names}
+
     with Progress() as progress:
-        task1 = progress.add_task("Overall", total=len(H))
-        task2 = progress.add_task("Functions", total=len(functions))
-        for h in H:
-            times.append([])
-            quality_min.append([])
-            quality_avg.append([])
-            num_poisson_steps.append([])
-            num_points.append([])
+        task1 = progress.add_task("Functions", total=len(functions))
+        task2 = progress.add_task("h", total=len(H))
+        for name, fun in zip(names, functions):
             progress.update(task2, completed=0)
-            for name, fun in zip(names, functions):
-                if h < timed_out_at[name]:
-                    # don't bother if the function already timed out with a smaller h
-                    times[-1].append(numpy.nan)
-                    quality_min[-1].append(numpy.nan)
-                    quality_avg[-1].append(numpy.nan)
-                    num_points[-1].append(numpy.nan)
-                    num_poisson_steps[-1].append(numpy.nan)
-                    progress.update(task2, advance=1)
-                    continue
-
+            for h in H:
                 try:
                     with time_limiter(time_limit):
-                        tic = time.time()
-                        points, cells = fun(h)
-                        toc = time.time()
+                        vals = compute(name, fun, h)
                 except TimeoutException:
                     print("Timeout!", name, h)
-                    timed_out_at[name] = h
-                    times[-1].append(numpy.nan)
-                    quality_min[-1].append(numpy.nan)
-                    quality_avg[-1].append(numpy.nan)
-                    num_points[-1].append(numpy.nan)
-                    num_poisson_steps[-1].append(numpy.nan)
-                else:
-                    if cells.shape[1] == 3:
-                        mesh = meshplex.MeshTri(points, cells)
-                    else:
-                        assert cells.shape[1] == 4
-                        mesh = meshplex.MeshTetra(points, cells)
-
-                    times[-1].append(toc - tic)
-                    quality_min[-1].append(numpy.min(mesh.q_radius_ratio))
-                    quality_avg[-1].append(numpy.average(mesh.q_radius_ratio))
-                    num_points[-1].append(mesh.node_coords.shape[0])
-
-                    if numpy.min(mesh.q_radius_ratio) < 1.0e-5:
-                        num_poisson_steps[-1].append(numpy.nan)
-                    else:
-                        num_steps = get_poisson_steps(points, cells, poisson_tol)
-                        num_poisson_steps[-1].append(num_steps)
-
+                    break
+                assert len(keys[1:]) == len(vals)
+                for key, val in zip(keys[1:], vals):
+                    data[name][key].append(val)
+                data[name]["h"].append(h)
                 progress.update(task2, advance=1)
             progress.update(task1, advance=1)
 
-    times = numpy.array(times)
-    quality_min = numpy.array(quality_min)
-    quality_avg = numpy.array(quality_avg)
-    num_poisson_steps = numpy.array(num_poisson_steps)
-    num_points = numpy.array(num_points)
+    # store data in files
+    with open(domain + ".json", "w") as f:
+        json.dump(data, f, indent=2)
+    exit(1)
 
+
+def create_plots():
     colors = [inspect.getmodule(fun).colors for fun in functions]
 
     # plot the data

@@ -8,7 +8,7 @@ from meshgen_comparison import (
     pygmsh_examples,
     seismicmesh_examples,
 )
-from meshgen_comparison.main import create_plots
+from meshgen_comparison.main import create_data, create_plots
 
 
 def disk():
@@ -27,7 +27,7 @@ def disk():
     # H = numpy.logspace(0.0, -2.1, num=15)  # 299.02s
     # H = numpy.logspace(-1.0, -2.1, num=15)  # 577.11s
     H = numpy.logspace(0.0, -2.1, num=15)  # 299.02s
-    create_plots("disk", functions, H)
+    create_data("disk", functions, H)
 
 
 def l_shape():
@@ -64,7 +64,7 @@ def ball():
         seismicmesh_examples.ball,
     ]
     # total runtime:
-    H = numpy.logspace(-1.0, -2.5, num=15)
+    H = numpy.logspace(-1.0, -3.0, num=15)
     create_plots("ball", functions, H)
 
 
@@ -90,9 +90,9 @@ def box_with_refinement():
 
 
 if __name__ == "__main__":
-    # disk()
+    disk()
     # l_shape()
     # rect_with_refinement()
-    ball()
+    # ball()
     # l_shape_3d()
     # box_with_refinement()

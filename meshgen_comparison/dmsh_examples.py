@@ -1,7 +1,7 @@
 import dmsh
 import numpy
 
-desc = f"dmsh {dmsh.__version__}"
+packages = [("dmsh", dmsh.__version__)]
 colors = ("#1f77b4", "#aec7e8")
 
 

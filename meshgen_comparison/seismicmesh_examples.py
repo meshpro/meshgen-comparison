@@ -1,7 +1,7 @@
 import numpy
 import SeismicMesh
 
-desc = f"SeismicMesh {SeismicMesh.__version__}"
+packages = [("SeismicMesh", SeismicMesh.__version__)]
 colors = ("#8c564b", "#c49c94")
 
 

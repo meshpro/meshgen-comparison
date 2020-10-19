@@ -1,7 +1,10 @@
 import numpy
 import pygalmesh
 
-desc = f"CGAL {pygalmesh.__cgal_version__} (via pygalmesh {pygalmesh.__version__})"
+packages = [
+    ("CGAL", pygalmesh.__cgal_version__),
+    ("pygalmesh", pygalmesh.__version__),
+]
 colors = ("#d62728", "#ff9896")
 
 

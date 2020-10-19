@@ -1,6 +1,6 @@
 import meshzoo
 
-desc = f"meshzoo {meshzoo.__version__}"
+packages = [("meshzoo", meshzoo.__version__)]
 colors = ("#2ca02c", "#98df8a")
 
 

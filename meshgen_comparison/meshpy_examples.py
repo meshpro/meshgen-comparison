@@ -3,7 +3,7 @@ import math
 import meshpy.triangle
 import numpy
 
-desc = f"MeshPy {meshpy.version}"
+packages = [("MeshPy", meshpy.version)]
 colors = ("#ff7f0e", "#ffbb78")
 
 
