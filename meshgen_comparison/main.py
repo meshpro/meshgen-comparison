@@ -115,7 +115,7 @@ def update_data_files():
         name = module.packages[0][0]
         print(name)
 
-        # check if the existing data is up-to-date
+        # check if the existing data is up-to-date and skip if that's true
         json_filename = name.lower() + ".json"
         if Path(json_filename).is_file():
             with open(json_filename) as f:
@@ -149,7 +149,6 @@ def create_data(module, time_limit=120):
             continue
         else:
             functions_h.append((fun, H))
-
     keys = [
         "h",
         "axpy_time",
@@ -201,9 +200,12 @@ def create_plots(domain):
         json_filename = name.lower() + ".json"
         with open(json_filename) as f:
             data = json.load(f)
+
+        label = ", ".join(" ".join(package) for package in module.packages)
         if domain in data["data"]:
             d = data["data"][domain]
-            plt.loglog(d["num_nodes"], d["time"], color=module.colors[0], label=name)
+            plt.loglog(d["num_nodes"], d["time"], color=module.colors[0], label=label)
+
     dufte.legend()
     plt.xlabel("num points")
     plt.title("mesh creation times [s]")
@@ -217,6 +219,7 @@ def create_plots(domain):
         json_filename = name.lower() + ".json"
         with open(json_filename) as f:
             data = json.load(f)
+        label = ", ".join(" ".join(package) for package in module.packages)
         if domain in data["data"]:
             d = data["data"][domain]
             plt.semilogx(
@@ -224,7 +227,7 @@ def create_plots(domain):
                 d["quality_avg"],
                 linestyle="-",
                 color=module.colors[0],
-                label=name,
+                label=label,
             )
             plt.semilogx(
                 d["num_nodes"], d["quality_min"], linestyle="--", color=module.colors[1]
@@ -243,13 +246,14 @@ def create_plots(domain):
         json_filename = name.lower() + ".json"
         with open(json_filename) as f:
             data = json.load(f)
+        label = ", ".join(" ".join(package) for package in module.packages)
         if domain in data["data"]:
             d = data["data"][domain]
             plt.loglog(
                 d["num_nodes"],
                 d["num_poisson_steps"],
                 color=module.colors[0],
-                label=name,
+                label=label,
             )
     dufte.legend()
     plt.xlabel("num points")
