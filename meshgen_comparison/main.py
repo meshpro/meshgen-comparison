@@ -139,7 +139,7 @@ def update_data_files():
         print()
 
 
-def create_data(module, time_limit=60):
+def create_data(module, time_limit=120):
     # collect functions
     functions_h = []
     for domain, H in domains_h:
@@ -187,44 +187,75 @@ def _measure_axpy(n):
     x = numpy.random.rand(n)
     y = numpy.random.rand(n)
     b = 3.14
+    # get the minimum over 5 iterations
     return min(timeit.repeat(stmt=lambda: b * x + y, repeat=5, number=1))
 
 
-def create_plots():
-    colors = [inspect.getmodule(fun).colors for fun in functions]
-
+def create_plots(domain):
     # plot the data
     plt.style.use(dufte.style)
-    for name, num_pts, t, cols in zip(names, num_points.T, times.T, colors):
-        plt.loglog(num_pts, t, color=cols[0], label=name)
+
+    # num nodes vs. time
+    for module in modules:
+        name = module.packages[0][0]
+        json_filename = name.lower() + ".json"
+        with open(json_filename) as f:
+            data = json.load(f)
+        if domain in data["data"]:
+            d = data["data"][domain]
+            plt.loglog(d["num_nodes"], d["time"], color=module.colors[0], label=name)
     dufte.legend()
     plt.xlabel("num points")
     plt.title("mesh creation times [s]")
-    plt.savefig(f"{prefix}-times.svg", transparent=True, bbox_inches="tight")
+    plt.savefig(f"{domain}-times.svg", transparent=True, bbox_inches="tight")
     # plt.show()
     plt.close()
 
-    for name, num_pts, qa, qm, cols in zip(
-        names, num_points.T, quality_avg.T, quality_min.T, colors
-    ):
-        plt.semilogx(num_pts, qa, color=cols[0], linestyle="-", label=f"{name}")
-        plt.semilogx(num_pts, qm, color=cols[1], linestyle="--", label="")
-        plt.ylim(0.0, 1.0)
+    # num nodes vs. cell quality
+    for module in modules:
+        name = module.packages[0][0]
+        json_filename = name.lower() + ".json"
+        with open(json_filename) as f:
+            data = json.load(f)
+        if domain in data["data"]:
+            d = data["data"][domain]
+            plt.semilogx(
+                d["num_nodes"],
+                d["quality_avg"],
+                linestyle="-",
+                color=module.colors[0],
+                label=name,
+            )
+            plt.semilogx(
+                d["num_nodes"], d["quality_min"], linestyle="--", color=module.colors[1]
+            )
     dufte.legend()
     plt.xlabel("num points")
     plt.title("cell quality, avg  and min (dashed)")
-    plt.savefig(f"{prefix}-quality.svg", transparent=True, bbox_inches="tight")
+    plt.ylim(0.0, 1.0)
+    plt.savefig(f"{domain}-quality.svg", transparent=True, bbox_inches="tight")
     # plt.show()
     plt.close()
 
-    for name, num_pts, np, cols in zip(
-        names, num_points.T, num_poisson_steps.T, colors
-    ):
-        plt.semilogx(num_pts, np, color=cols[0], label=f"{name}")
+    # num nodes vs. CG iterations for Poisson
+    for module in modules:
+        name = module.packages[0][0]
+        json_filename = name.lower() + ".json"
+        with open(json_filename) as f:
+            data = json.load(f)
+        if domain in data["data"]:
+            d = data["data"][domain]
+            plt.loglog(
+                d["num_nodes"],
+                d["num_poisson_steps"],
+                color=module.colors[0],
+                label=name,
+            )
     dufte.legend()
     plt.xlabel("num points")
+    poisson_tol = 1.0e-10
     plt.title(f"number of CG steps for the Poisson problem (tol={poisson_tol:.1e})")
-    plt.savefig(f"{prefix}-poisson.svg", transparent=True, bbox_inches="tight")
+    plt.savefig(f"{domain}-poisson.svg", transparent=True, bbox_inches="tight")
     # plt.show()
     plt.close()
 
@@ -293,3 +324,5 @@ def get_poisson_steps(pts, cells, tol):
 
 if __name__ == "__main__":
     update_data_files()
+    for domain, _ in domains_h:
+        create_plots(domain)
