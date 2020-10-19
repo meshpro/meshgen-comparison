@@ -1,8 +1,10 @@
+import datetime
 import inspect
 import json
 import os
 import signal
 import time
+import timeit
 from contextlib import contextmanager
 
 import dufte
@@ -97,51 +99,82 @@ def compute(fun, h):
         poisson_tol = 1.0e-10
         num_poisson_steps = get_poisson_steps(points, cells, poisson_tol)
 
-    return (
-        toc - tic,
-        numpy.min(mesh.q_radius_ratio),
-        numpy.average(mesh.q_radius_ratio),
-        mesh.node_coords.shape[0],
-        num_poisson_steps,
-    )
+    return {
+        "time": toc - tic,
+        # convert to python float types to JSON compatibility
+        "quality_min": float(numpy.min(mesh.q_radius_ratio)),
+        "quality_avg": float(numpy.average(mesh.q_radius_ratio)),
+        "num_nodes": mesh.node_coords.shape[0],
+        "num_poisson_steps": num_poisson_steps,
+    }
 
 
-def create_data(module, time_limit=60):
+def create_data(module, time_limit=5):
     name = module.packages[0][0]
     print(name)
 
-    keys = ["h", "time", "quality_min", "quality_avg", "num_nodes", "num_poisson_steps"]
+    # collect functions
+    functions_h = []
+    for domain, H in domains_h:
+        try:
+            fun = getattr(module, domain)
+        except AttributeError:
+            continue
+        else:
+            functions_h.append((fun, H))
+
+    keys = [
+        "h",
+        "axpy_time",
+        "time",
+        "quality_min",
+        "quality_avg",
+        "num_nodes",
+        "num_poisson_steps",
+    ]
+    data = {}
     with Progress() as progress:
-        task0 = progress.add_task("domains", total=len(domains_h))
+        task0 = progress.add_task("domains", total=len(functions_h))
         task1 = progress.add_task("h")
-        data = {domain: {key: [] for key in keys} for domain, _ in domains_h}
-        for domain, H in domains_h:
+        for fun, H in functions_h:
+            data[fun.__name__] = {key: [] for key in keys}
             progress.update(task1, total=len(H))
             progress.reset(task1)
-            try:
-                fun = getattr(module, domain)
-            except AttributeError:
-                continue
-
             for h in H:
                 try:
                     with time_limiter(time_limit):
                         vals = compute(fun, h)
                 except TimeoutException:
-                    print("Timeout!", name, h)
+                    print("Timeout!", fun.__name__, h)
                     break
-                assert len(keys[1:]) == len(vals)
-                for key, val in zip(keys[1:], vals):
-                    data[domain][key].append(val)
-                data[domain]["h"].append(h)
+                for key, val in vals.items():
+                    data[fun.__name__][key].append(val)
+                data[fun.__name__]["h"].append(h)
+                data[fun.__name__]["axpy_time"].append(_measure_axpy(vals["num_nodes"]))
                 progress.update(task1, advance=1)
             progress.update(task0, advance=1)
 
+    # store data in files
+    with open(name + ".json", "w") as f:
+        json.dump(
+            {
+                "name": name,
+                "date": datetime.datetime.utcnow().replace(microsecond=0).isoformat(),
+                "packages": module.packages,
+                "data": data,
+            },
+            f,
+            indent=2,
+        )
+
     print()
 
-    # store data in files
-    with open(domain + ".json", "w") as f:
-        json.dump(data, f, indent=2)
+
+def _measure_axpy(n):
+    x = numpy.random.rand(n)
+    y = numpy.random.rand(n)
+    b = 3.14
+    return min(timeit.repeat(stmt=lambda: b * x + y, repeat=5, number=1))
 
 
 def create_plots():
