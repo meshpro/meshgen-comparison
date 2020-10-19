@@ -140,7 +140,6 @@ def update_data_files():
 
 
 def create_data(module, time_limit=60):
-    name = module.packages[0][0]
     # collect functions
     functions_h = []
     for domain, H in domains_h:
@@ -181,7 +180,7 @@ def create_data(module, time_limit=60):
                 data[fun.__name__]["axpy_time"].append(_measure_axpy(vals["num_nodes"]))
                 progress.update(task1, advance=1)
             progress.update(task0, advance=1)
-    return name, data
+    return data
 
 
 def _measure_axpy(n):
