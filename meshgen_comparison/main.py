@@ -109,7 +109,7 @@ def compute(fun, h):
     }
 
 
-def create_data(module, time_limit=5):
+def create_data(module, time_limit=60):
     name = module.packages[0][0]
     print(name)
 
@@ -155,7 +155,7 @@ def create_data(module, time_limit=5):
             progress.update(task0, advance=1)
 
     # store data in files
-    with open(name + ".json", "w") as f:
+    with open(name.lower() + ".json", "w") as f:
         json.dump(
             {
                 "name": name,
