@@ -253,7 +253,7 @@ def create_plots(domain):
         label = ", ".join(" ".join(package) for package in module.packages)
         if domain in data["data"]:
             d = data["data"][domain]
-            plt.loglog(
+            plt.semilogx(
                 d["num_nodes"],
                 d["num_poisson_steps"],
                 color=module.colors[0],
