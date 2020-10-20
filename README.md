@@ -24,16 +24,16 @@ For each domain and mesh generator (if applicable), the repostory shows the foll
 
 ### L-shape
 
-<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-times.svg?raw=true) |
+<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l_shape-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l_shape-times.svg?raw=true) |
 :-------------:|:-----------------:|
-| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-poisson.svg?raw=true)
+| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l_shape-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l_shape-poisson.svg?raw=true)
 
 
 ### Rectangle with refinement
 
-<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-times.svg?raw=true) |
+<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect_with_refinement-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect_with_refinement-times.svg?raw=true) |
 :-------------:|:-----------------:|
-| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect-with-refinement-poisson.svg?raw=true)
+| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect_with_refinement-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect_with_refinement-poisson.svg?raw=true)
 
 ### Ball
 
@@ -43,15 +43,15 @@ For each domain and mesh generator (if applicable), the repostory shows the foll
 
 ### L-shape in 3D
 
-<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-times.svg?raw=true) |
+<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l_shape_3d-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l_shape_3d-times.svg?raw=true) |
 :-------------:|:-----------------:|
-| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-poisson.svg?raw=true)
+| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l_shape_3d-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l_shape_3d-poisson.svg?raw=true)
 
 ### Box with refinement
 
-<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-times.svg?raw=true) |
+<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box_with_refinement-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box_with_refinement-times.svg?raw=true) |
 :-------------:|:-----------------:|
-| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box-with-refinement-poisson.svg?raw=true)
+| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box_with_refinement-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/box_with_refinement-poisson.svg?raw=true)
 
 ### License
 This software is published under the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html).
