@@ -207,8 +207,10 @@ def create_plots(domain):
 
         label = ", ".join(" ".join(package) for package in module.packages)
         if domain in data["data"]:
-            d = data["data"][domain]
-            plt.loglog(d["num_nodes"], d["time"], color=module.colors[0], label=label)
+            x = numpy.array(data["data"][domain]["num_nodes"])
+            y = numpy.array(data["data"][domain]["time"])
+            idx = numpy.argsort(x)
+            plt.loglog(x[idx], y[idx], color=module.colors[0], label=label)
 
     dufte.legend()
     plt.xlabel("num points")
@@ -225,17 +227,14 @@ def create_plots(domain):
             data = json.load(f)
         label = ", ".join(" ".join(package) for package in module.packages)
         if domain in data["data"]:
-            d = data["data"][domain]
+            x = numpy.array(data["data"][domain]["num_nodes"])
+            y0 = numpy.array(data["data"][domain]["quality_avg"])
+            y1 = numpy.array(data["data"][domain]["quality_min"])
+            idx = numpy.argsort(x)
             plt.semilogx(
-                d["num_nodes"],
-                d["quality_avg"],
-                linestyle="-",
-                color=module.colors[0],
-                label=label,
+                x[idx], y0[idx], linestyle="-", color=module.colors[0], label=label
             )
-            plt.semilogx(
-                d["num_nodes"], d["quality_min"], linestyle="--", color=module.colors[1]
-            )
+            plt.semilogx(x[idx], y1[idx], linestyle="--", color=module.colors[1])
     dufte.legend()
     plt.xlabel("num points")
     plt.title("cell quality, avg  and min (dashed)")
@@ -252,13 +251,10 @@ def create_plots(domain):
             data = json.load(f)
         label = ", ".join(" ".join(package) for package in module.packages)
         if domain in data["data"]:
-            d = data["data"][domain]
-            plt.semilogx(
-                d["num_nodes"],
-                d["num_poisson_steps"],
-                color=module.colors[0],
-                label=label,
-            )
+            x = numpy.array(data["data"][domain]["num_nodes"])
+            y = numpy.array(data["data"][domain]["num_poisson_steps"])
+            idx = numpy.argsort(x)
+            plt.semilogx(x[idx], y[idx], color=module.colors[0], label=label)
     dufte.legend()
     plt.xlabel("num points")
     poisson_tol = 1.0e-10
