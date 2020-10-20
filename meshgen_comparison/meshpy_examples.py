@@ -99,45 +99,47 @@ def rect_with_refinement(h):
     return numpy.array(mesh.points), numpy.array(mesh.elements)
 
 
-def ball(h):
-    from meshpy.geometry import (
-        EXT_OPEN,
-        GeometryBuilder,
-        generate_surface_of_revolution,
-    )
-    from meshpy.tet import MeshInfo, build
-
-    r = 3
-
-    polar_subdivision = int(math.pi / h)
-    dphi = math.pi / polar_subdivision
-
-    def truncate(val):
-        return 0 if abs(val) < 1e-10 else val
-
-    rz = [
-        [truncate(r * math.sin(i * dphi)), r * math.cos(i * dphi)]
-        for i in range(polar_subdivision + 1)
-    ]
-
-    geob = GeometryBuilder()
-    radial_subdivision = int(2 * math.pi / h)
-    geob.add_geometry(
-        *generate_surface_of_revolution(
-            rz, closure=EXT_OPEN, radial_subdiv=radial_subdivision
-        )
-    )
-
-    mesh_info = MeshInfo()
-    geob.set(mesh_info)
-
-    mesh = build(mesh_info)
-
-    # remove orphaned nodes
-    mesh = meshio.Mesh(numpy.array(mesh.points), {"tetra": numpy.array(mesh.elements)})
-    mesh.remove_orphaned_nodes()
-
-    return mesh.points, mesh.get_cells_type("tetra")
+# segfaults, doesn't react to term signals
+# https://github.com/inducer/meshpy/issues/58
+# def ball(h):
+#     from meshpy.geometry import (
+#         EXT_OPEN,
+#         GeometryBuilder,
+#         generate_surface_of_revolution,
+#     )
+#     from meshpy.tet import MeshInfo, build
+#
+#     r = 3
+#
+#     polar_subdivision = int(math.pi / h)
+#     dphi = math.pi / polar_subdivision
+#
+#     def truncate(val):
+#         return 0 if abs(val) < 1e-10 else val
+#
+#     rz = [
+#         [truncate(r * math.sin(i * dphi)), r * math.cos(i * dphi)]
+#         for i in range(polar_subdivision + 1)
+#     ]
+#
+#     geob = GeometryBuilder()
+#     radial_subdivision = int(2 * math.pi / h)
+#     geob.add_geometry(
+#         *generate_surface_of_revolution(
+#             rz, closure=EXT_OPEN, radial_subdiv=radial_subdivision
+#         )
+#     )
+#
+#     mesh_info = MeshInfo()
+#     geob.set(mesh_info)
+#
+#     mesh = build(mesh_info)
+#
+#     # remove orphaned nodes
+#     mesh = meshio.Mesh(numpy.array(mesh.points), {"tetra": numpy.array(mesh.elements)})
+#     mesh.remove_orphaned_nodes()
+#
+#     return mesh.points, mesh.get_cells_type("tetra")
 
 
 if __name__ == "__main__":

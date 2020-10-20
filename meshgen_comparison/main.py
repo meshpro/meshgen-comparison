@@ -1,5 +1,4 @@
 import datetime
-import inspect
 import json
 import os
 import signal
@@ -71,7 +70,6 @@ domains_h = [
 ]
 
 
-# https://stackoverflow.com/a/601168/353337
 class TimeoutException(Exception):
     pass
 
