@@ -259,6 +259,7 @@ def create_plots(domain):
     plt.xlabel("num points")
     poisson_tol = 1.0e-10
     plt.title(f"number of CG steps for the Poisson problem (tol={poisson_tol:.1e})")
+    plt.ylim(0.0)
     plt.savefig(f"{domain}-poisson.svg", transparent=True, bbox_inches="tight")
     # plt.show()
     plt.close()
