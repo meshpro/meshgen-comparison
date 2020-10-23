@@ -53,11 +53,11 @@ from meshgen_comparison import (
 # ]
 
 modules = [
-    dmsh_examples,
-    meshpy_examples,
-    meshzoo_examples,
-    pygalmesh_examples,
-    pygmsh_examples,
+    # dmsh_examples,
+    # meshpy_examples,
+    # meshzoo_examples,
+    # pygalmesh_examples,
+    # pygmsh_examples,
     seismicmesh_examples,
 ]
 domains_h = [
