@@ -53,11 +53,11 @@ from meshgen_comparison import (
 # ]
 
 modules = [
-    # dmsh_examples,
-    # meshpy_examples,
-    # meshzoo_examples,
-    # pygalmesh_examples,
-    # pygmsh_examples,
+    dmsh_examples,
+    meshpy_examples,
+    meshzoo_examples,
+    pygalmesh_examples,
+    pygmsh_examples,
     seismicmesh_examples,
 ]
 domains_h = [
@@ -65,7 +65,7 @@ domains_h = [
     ("l_shape", numpy.logspace(-1.0, -2.1, num=15)),
     ("rect_with_refinement", numpy.logspace(-1.0, -3.0, num=15)),
     ("ball", numpy.logspace(-1.0, -3.0, num=15)),
-    ("l_shape_3d", numpy.logspace(-1.0, -2.0, num=15)),
+    ("l_shape_3d", numpy.logspace(-1.0, -1.8, num=15)),
     ("box_with_refinement", numpy.logspace(-1.0, -2.0, num=15)),
 ]
 
@@ -116,8 +116,8 @@ def compute(fun, h):
 
 def update_data_files():
     for module in modules:
-        name = module.packages[0][0]
-        print(name)
+        name, version = module.packages[0]
+        print(f"{name} {version}")
 
         # check if the existing data is up-to-date and skip if that's true
         json_filename = name.lower() + ".json"
