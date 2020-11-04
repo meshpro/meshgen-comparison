@@ -177,8 +177,14 @@ def create_data(module, time_limit=120):
                 except TimeoutException:
                     print("Timeout!", fun.__name__, h)
                     break
-                for key, val in vals.items():
-                    data[fun.__name__][key].append(val)
+                except Exception:
+                    print(f"Exception in mesh generation ({fun.__name__}).")
+                    for key, val in vals.items():
+                        data[fun.__name__][key].append(numpy.nan)
+                else:
+                    for key, val in vals.items():
+                        data[fun.__name__][key].append(val)
+
                 data[fun.__name__]["h"].append(h)
                 data[fun.__name__]["axpy_time"].append(_measure_axpy(vals["num_nodes"]))
                 progress.update(task1, advance=1)
