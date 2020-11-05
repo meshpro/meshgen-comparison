@@ -109,7 +109,7 @@ def compute(fun, h):
         # convert to python float types to JSON compatibility
         "quality_min": float(numpy.min(mesh.q_radius_ratio)),
         "quality_avg": float(numpy.average(mesh.q_radius_ratio)),
-        "num_nodes": mesh.node_coords.shape[0],
+        "num_nodes": mesh.points.shape[0],
         "num_poisson_steps": num_poisson_steps,
     }
 
