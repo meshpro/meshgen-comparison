@@ -15,8 +15,8 @@ def disk(h):
 
 
 def l_shape(h):
-    rect0 = SeismicMesh.Rectangle([0.0, 1.0, 0.0, 0.5])
-    rect1 = SeismicMesh.Rectangle([0.0, 0.5, 0.0, 1.0])
+    rect0 = SeismicMesh.Rectangle([-1.0, 1.0, -1.0, 0.0])
+    rect1 = SeismicMesh.Rectangle([-1.0, 0.0, -1.0, 1.0])
     domain = SeismicMesh.Union([rect0, rect1])
     points, cells = SeismicMesh.generate_mesh(domain=domain, edge_length=h, verbose=0)
     return points, cells
@@ -48,9 +48,9 @@ def ball(h):
 def l_shape_3d(h):
     tol = h / 10
 
-    cube0 = SeismicMesh.Cube((0.0, 1.0, 0.0, 1.0, 0.0, 0.50 + tol))
-    cube1 = SeismicMesh.Cube((0.0, 1.0, 0.5, 1.0, 0.50 - tol, 1.0))
-    cube2 = SeismicMesh.Cube((0.5 - tol, 1.0, 0.0, 1.0, 0.50 - tol, 1.0))
+    cube0 = SeismicMesh.Cube((-1.0, 1.0, -1.0, 1.0, -1.0, tol))
+    cube1 = SeismicMesh.Cube((-1.0, 1.0, 0.0, 1.0, -tol, 1.0))
+    cube2 = SeismicMesh.Cube((-tol, 1.0, -1.0, 1.0, -tol, 1.0))
     domain = SeismicMesh.Union([cube0, cube1, cube2])
 
     points, cells = SeismicMesh.generate_mesh(domain=domain, edge_length=h, verbose=0)
@@ -82,5 +82,5 @@ def box_with_refinement(h):
 if __name__ == "__main__":
     import meshio
 
-    points, cells = box_with_refinement(0.1)
-    meshio.Mesh(points, {"tetra": cells}).write("out.vtk")
+    points, cells = l_shape(0.1)
+    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
