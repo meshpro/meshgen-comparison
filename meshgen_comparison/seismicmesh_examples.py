@@ -45,6 +45,15 @@ def ball(h):
     return points, cells
 
 
+def cylinder(h):
+    cylinder = SeismicMesh.Cylinder(h=1.0, r=1.0)
+    points, cells = SeismicMesh.generate_mesh(domain=cylinder, edge_length=h, verbose=0)
+    points, cells = SeismicMesh.sliver_removal(
+        points=points, domain=cylinder, edge_length=h, verbose=0
+    )
+    return points, cells
+
+
 def l_shape_3d(h):
     tol = h / 10
 
