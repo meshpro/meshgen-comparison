@@ -61,6 +61,16 @@ def ball(h):
     return mesh.points, mesh.get_cells_type("tetra")
 
 
+def cylinder(h):
+    s = pygalmesh.Cylinder(0.0, 1.0, 0.5, h)
+    # The circumradius of a regular tetrahedron with the given edge_size is sqrt(3 / 8)
+    # * edge_size ~= 0.61 * edge_size. Relax it a bit and just use h.
+    mesh = pygalmesh.generate_mesh(
+        s, max_cell_circumradius=h, max_edge_size_at_feature_edges=h, verbose=False
+    )
+    return mesh.points, mesh.get_cells_type("tetra")
+
+
 def l_shape_3d(h):
     b0 = pygalmesh.Cuboid([-1.0, -1.0, -1.0], [1.0, 1.0, 1.0])
     b1 = pygalmesh.Cuboid([0.0, 0.0, 0.0], [1.1, 1.1, 1.1])
@@ -102,5 +112,5 @@ def box_with_refinement(h):
 if __name__ == "__main__":
     import meshio
 
-    points, cells = l_shape_3d(0.1)
+    points, cells = cylinder(0.1)
     meshio.Mesh(points, {"tetra": cells}).write("out.vtk")

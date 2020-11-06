@@ -69,6 +69,14 @@ def ball(h):
     return mesh.points, mesh.get_cells_type("tetra")
 
 
+def cylinder(h):
+    with pygmsh.occ.Geometry() as geom:
+        geom.characteristic_length_max = h
+        geom.add_cylinder([0, 0, 0], [0.0, 0.0, 1.0], 0.5)
+        mesh = geom.generate_mesh()
+    return mesh.points, mesh.get_cells_type("tetra")
+
+
 def l_shape_3d(h):
     with pygmsh.occ.Geometry() as geom:
         geom.characteristic_length_max = h
@@ -97,5 +105,6 @@ if __name__ == "__main__":
     # points, cells = l_shape(0.1)
     # points, cells = rect_with_refinement(0.01)
     # points, cells = l_shape_3d(0.1)
-    points, cells = box_with_refinement(0.01)
+    # points, cells = box_with_refinement(0.01)
+    points, cells = cylinder(0.05)
     meshio.Mesh(points, {"tetra": cells}).write("out.vtk")

@@ -41,6 +41,12 @@ For each domain and mesh generator (if applicable), the repostory shows the foll
 :-------------:|:-----------------:|
 | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/ball-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/ball-poisson.svg?raw=true)
 
+### Cylinder
+
+<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/cylinder-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/cylinder-times.svg?raw=true) |
+:-------------:|:-----------------:|
+| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/cylinder-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/cylinder-poisson.svg?raw=true)
+
 ### L-shape in 3D
 
 <img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l-shape-3d-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/l_shape_3d-times.svg?raw=true) |
