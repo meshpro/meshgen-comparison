@@ -34,6 +34,20 @@ def rect_with_refinement(h):
     return points, cells
 
 
+def quarter_annulus(h):
+    rect = SeismicMesh.Rectangle((0.0, 1.0, 0.0, 1.0))
+    disk0 = SeismicMesh.Disk([0.0, 0.0], 0.25)
+    diff0 = SeismicMesh.Difference([rect, disk0])
+
+    disk1 = SeismicMesh.Disk([0.0, 0.0], 1.0)
+    quarter = SeismicMesh.Intersection([diff0, disk1])
+
+    points, cells = SeismicMesh.generate_mesh(
+        domain=quarter, edge_length=lambda x: h + 0.10 * numpy.abs(disk0.eval(x)), h0=h
+    )
+    return points, cells
+
+
 def ball(h):
     ball = SeismicMesh.Ball([0.0, 0.0, 0.0], 1.0)
     points, cells = SeismicMesh.generate_mesh(
@@ -91,5 +105,5 @@ def box_with_refinement(h):
 if __name__ == "__main__":
     import meshio
 
-    points, cells = l_shape(0.1)
+    points, cells = quarter_annulus(0.01)
     meshio.Mesh(points, {"triangle": cells}).write("out.vtk")

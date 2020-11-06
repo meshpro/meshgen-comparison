@@ -1,5 +1,6 @@
 import math
 
+import numpy
 import pygmsh
 
 packages = [
@@ -61,6 +62,26 @@ def rect_with_refinement(h):
     return mesh.points, mesh.get_cells_type("triangle")
 
 
+def quarter_annulus(h):
+    with pygmsh.occ.Geometry() as geom:
+        r0 = 0.25
+        r1 = 1.0
+        disk0 = geom.add_disk([0.0, 0.0], r0)
+        disk1 = geom.add_disk([0.0, 0.0], r1)
+        diff0 = geom.boolean_difference(disk1, disk0)
+
+        rect = geom.add_rectangle([0.0, 0.0, 0.0], 1.0, 1.0)
+        geom.boolean_intersection([diff0, rect])
+
+        geom.set_mesh_size_callback(
+            lambda dim, tag, x, y, z: h + 0.1 * (numpy.sqrt(x ** 2 + y ** 2) - r0),
+        )
+        mesh = geom.generate_mesh()
+
+    mesh.prune_z_0()
+    return mesh.points, mesh.get_cells_type("triangle")
+
+
 def ball(h):
     with pygmsh.occ.Geometry() as geom:
         geom.characteristic_length_max = h
@@ -106,5 +127,6 @@ if __name__ == "__main__":
     # points, cells = rect_with_refinement(0.01)
     # points, cells = l_shape_3d(0.1)
     # points, cells = box_with_refinement(0.01)
-    points, cells = cylinder(0.05)
-    meshio.Mesh(points, {"tetra": cells}).write("out.vtk")
+    # points, cells = cylinder(0.05)
+    points, cells = quarter_annulus(0.01)
+    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")

@@ -16,14 +16,6 @@ def disk(h):
     # return points, cells
 
 
-def rect_with_refinement(h):
-    return dmsh.generate(
-        dmsh.Rectangle(-1.0, 1.0, -1.0, 1.0),
-        edge_size=lambda x: h + 0.1 * numpy.sqrt(x[0] ** 2 + x[1] ** 2),
-        tol=1.0e-10,
-    )
-
-
 def l_shape(h):
     return dmsh.generate(
         dmsh.Polygon(
@@ -41,8 +33,30 @@ def l_shape(h):
     )
 
 
+def rect_with_refinement(h):
+    return dmsh.generate(
+        dmsh.Rectangle(-1.0, 1.0, -1.0, 1.0),
+        edge_size=lambda x: h + 0.1 * numpy.sqrt(x[0] ** 2 + x[1] ** 2),
+        tol=1.0e-10,
+    )
+
+
+def quarter_annulus(h):
+    disk0 = dmsh.Circle([0.0, 0.0], 0.25)
+    disk1 = dmsh.Circle([0.0, 0.0], 1.0)
+    diff0 = dmsh.Difference(disk1, disk0)
+
+    rect = dmsh.Rectangle(0.0, 1.0, 0.0, 1.0)
+    quarter = dmsh.Intersection([diff0, rect])
+
+    points, cells = dmsh.generate(
+        quarter, edge_size=lambda x: h + 0.1 * numpy.abs(disk0.dist(x)), tol=1.0e-10
+    )
+    return points, cells
+
+
 if __name__ == "__main__":
     import meshio
 
-    points, cells = disk(0.1)
+    points, cells = quarter_annulus(0.01)
     meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
