@@ -64,6 +64,7 @@ domains_h = [
     ("disk", numpy.logspace(-1.0, -2.1, num=15)),
     ("l_shape", numpy.logspace(-1.0, -2.1, num=15)),
     ("rect_with_refinement", numpy.logspace(-1.0, -3.0, num=15)),
+    ("quarter_annulus", numpy.logspace(-1.0, -3.0, num=15)),
     ("ball", numpy.logspace(-1.0, -3.0, num=15)),
     ("cylinder", numpy.logspace(-1.0, -3.0, num=15)),
     ("l_shape_3d", numpy.logspace(-1.0, -1.8, num=15)),
@@ -115,37 +116,11 @@ def compute(fun, h):
     }
 
 
-def update_data_files():
-    for module in modules:
-        name, version = module.packages[0]
-        print(f"{name} {version}")
+def update_data_file(module):
+    name, version = module.packages[0]
+    print(f"{name} {version}")
 
-        # check if the existing data is up-to-date and skip if that's true
-        json_filename = name.lower() + ".json"
-        if Path(json_filename).is_file():
-            with open(json_filename) as f:
-                data = json.load(f)
-            data_packages = [tuple(p) for p in data["packages"]]
-            if set(module.packages) == set(data_packages):
-                print(f"{json_filename} up to date.")
-                print()
-                continue
-
-        # skip if computed before
-        data = create_data(module)
-        # store data in files
-        with open(name.lower() + ".json", "w") as f:
-            now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
-            json.dump(
-                {"name": name, "date": now, "packages": module.packages, "data": data},
-                f,
-                indent=2,
-            )
-        print()
-
-
-def create_data(module, time_limit=120):
-    # collect functions
+    # collect all possible functions
     functions_h = []
     for domain, H in domains_h:
         try:
@@ -154,6 +129,50 @@ def create_data(module, time_limit=120):
             continue
         else:
             functions_h.append((fun, H))
+
+    # check if the existing data is up-to-date and skip if that's true
+    json_filename = name.lower() + ".json"
+    if Path(json_filename).is_file():
+        with open(json_filename) as f:
+            content = json.load(f)
+        data_packages = [tuple(p) for p in content["packages"]]
+        if set(module.packages) == set(data_packages):
+            # versions up-to-date; check if all domains are present
+            functions_h = [
+                fun_h
+                for fun_h in functions_h
+                if fun_h[0].__name__ not in content["data"]
+            ]
+        else:
+            # version outdated; rerun all
+            pass
+    else:
+        content = {"data": []}
+
+    if len(functions_h) == 0:
+        print(f"{json_filename} up to date.")
+        print()
+        return
+    print(f"{len(functions_h)} domains remaining: ")
+
+    # skip if computed before
+    data = create_data(functions_h)
+
+    # merge with original file content
+    data = {**content["data"], **data}  # `content["data"] | data` for Python 3.9+
+
+    # store data in files
+    with open(name.lower() + ".json", "w") as f:
+        now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+        json.dump(
+            {"name": name, "date": now, "packages": module.packages, "data": data},
+            f,
+            indent=2,
+        )
+    print()
+
+
+def create_data(functions_h, time_limit=120):
     keys = [
         "h",
         "axpy_time",
@@ -335,6 +354,7 @@ def get_poisson_steps(pts, cells, tol):
 
 
 if __name__ == "__main__":
-    update_data_files()
+    for module in modules:
+        update_data_file(module)
     for domain, _ in domains_h:
         create_plots(domain)
