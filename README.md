@@ -35,6 +35,14 @@ For each domain and mesh generator (if applicable), the repostory shows the foll
 :-------------:|:-----------------:|
 | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect_with_refinement-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/rect_with_refinement-poisson.svg?raw=true)
 
+
+### Rectangle with refinement
+
+<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/quarter-annulus-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/quarter-annulus-times.svg?raw=true) |
+:-------------:|:-----------------:|
+| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/quarter-annulus-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/quarter-annulus-poisson.svg?raw=true)
+
+
 ### Ball
 
 <img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/ball-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/ball-times.svg?raw=true) |
