@@ -10,10 +10,13 @@ compares the results. The used mesh generators are
   * [meshzoo](https://github.com/nschloe/meshzoo), and
   * [SeismicMesh](https://github.com/krober10nd/SeismicMesh).
 
-For each domain and mesh generator (if applicable), the repostory shows the following data:
+For each domain and mesh generator (if applicable), the repostory shows the following
+data:
    * the mesh generation time
    * the average and minimum cell quality
    * the nummber of CG iterations for the FEM-Poisson-problem on the mesh.
+
+If you'd like to see other mesh generators, domains, or quality measures: Let me know!
 
 ### Disk
 
