@@ -43,7 +43,7 @@ def quarter_annulus(h):
     quarter = SeismicMesh.Intersection([diff0, disk1])
 
     points, cells = SeismicMesh.generate_mesh(
-        domain=quarter, edge_length=lambda x: h + 0.10 * numpy.abs(disk0.eval(x)), h0=h
+        domain=quarter, edge_length=lambda x: h + 0.1 * numpy.abs(disk0.eval(x)), h0=h
     )
     return points, cells
 

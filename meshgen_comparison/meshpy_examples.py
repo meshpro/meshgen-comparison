@@ -99,6 +99,54 @@ def rect_with_refinement(h):
     return numpy.array(mesh.points), numpy.array(mesh.elements)
 
 
+def quarter_annulus(h):
+    r0 = 0.25
+    r1 = 1.0
+
+    def edge_length(r):
+        return h + 0.1 * (r - r0)
+
+    # boundary points
+    h0 = edge_length(r0)
+    h1 = edge_length(r1)
+    n0 = int(r0 * numpy.pi / 2 / h0)
+    n1 = int(r1 * numpy.pi / 2 / h1)
+    boundary_points = [
+        [r1 * numpy.cos(phi), r1 * numpy.sin(phi)]
+        for phi in numpy.linspace(0.0, numpy.pi / 2, n1, endpoint=True)
+    ] + [
+        [r0 * numpy.cos(phi), r0 * numpy.sin(phi)]
+        for phi in numpy.linspace(numpy.pi / 2, 0.0, n0, endpoint=True)
+    ]
+
+    # create the mesh
+    info = meshpy.triangle.MeshInfo()
+    info.set_points(boundary_points)
+
+    info.set_facets(_round_trip_connect(len(boundary_points) - 1))
+
+    def needs_refinement(verts, area):
+        edges = numpy.array(
+            [
+                [verts[0].x - verts[1].x, verts[0].y - verts[1].y],
+                [verts[1].x - verts[2].x, verts[1].y - verts[2].y],
+                [verts[2].x - verts[0].x, verts[2].y - verts[0].y],
+            ]
+        )
+        edge_lengths = numpy.sqrt(numpy.einsum("ij,ij->i", edges, edges))
+        barycenter = [
+            (verts[0].x + verts[1].x + verts[2].x) / 3,
+            (verts[0].y + verts[1].y + verts[2].y) / 3,
+        ]
+        lim = edge_length(math.sqrt(barycenter[0] ** 2 + barycenter[1] ** 2))
+        # relax the limit a bit; the refinement is too strict otherwise
+        return numpy.any(edge_lengths > lim * 1.5)
+
+    meshpy_mesh = meshpy.triangle.build(info, refinement_func=needs_refinement)
+
+    return numpy.array(meshpy_mesh.points), numpy.array(meshpy_mesh.elements)
+
+
 # segfaults, doesn't react to term signals
 # https://github.com/inducer/meshpy/issues/58
 # def ball(h):
@@ -143,6 +191,5 @@ def rect_with_refinement(h):
 
 
 if __name__ == "__main__":
-    points, cells = l_shape(0.1)
-    # points, cells = ball(0.1)
+    points, cells = quarter_annulus(0.02)
     meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
