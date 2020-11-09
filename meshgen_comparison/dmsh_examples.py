@@ -1,7 +1,9 @@
+from importlib.metadata import version
+
 import dmsh
 import numpy
 
-packages = [("dmsh", dmsh.__version__)]
+packages = [("dmsh", version("dmsh"))]
 colors = ("#2ca02c", "#98df8a")  # cat20 green
 
 
