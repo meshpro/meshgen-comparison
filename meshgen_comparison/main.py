@@ -65,7 +65,7 @@ domains_h = [
     ("l_shape", numpy.logspace(-1.0, -2.1, num=15)),
     ("rect_with_refinement", numpy.logspace(-1.0, -3.0, num=15)),
     ("quarter_annulus", numpy.logspace(-1.0, -3.0, num=15)),
-    ("sphere", numpy.logspace(-1.0, -3.0, num=15)),
+    ("sphere", numpy.logspace(-1.0, -2.5, num=15)),
     ("ball", numpy.logspace(-1.0, -3.0, num=15)),
     ("cylinder", numpy.logspace(-1.0, -3.0, num=15)),
     ("l_shape_3d", numpy.logspace(-1.0, -1.8, num=15)),
@@ -101,7 +101,7 @@ def compute(fun, h):
         assert cells.shape[1] == 4
         mesh = meshplex.MeshTetra(points, cells)
 
-    if numpy.min(mesh.q_radius_ratio) < 1.0e-5:
+    if fun.__name__ == "sphere" or numpy.min(mesh.q_radius_ratio) < 1.0e-5:
         num_poisson_steps = numpy.nan
     else:
         poisson_tol = 1.0e-10

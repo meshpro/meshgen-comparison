@@ -1,6 +1,9 @@
+from importlib.metadata import version
+
+import numpy
 import meshzoo
 
-packages = [("meshzoo", meshzoo.__version__)]
+packages = [("meshzoo", version("meshzoo"))]
 colors = ("#8c564b", "#c49c94")  # cat20 brown
 
 
@@ -18,7 +21,6 @@ def sphere(h):
 
 
 if __name__ == "__main__":
-    import numpy
     import meshio
 
     points, cells = sphere(0.3)
