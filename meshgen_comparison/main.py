@@ -148,7 +148,7 @@ def update_data_file(module):
             # version outdated; rerun all
             pass
     else:
-        content = {"data": []}
+        content = {"data": {}}
 
     if len(functions_h) == 0:
         print(f"{json_filename} up to date.")
