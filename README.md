@@ -46,6 +46,13 @@ If you'd like to see other mesh generators, domains, or quality measures: Let me
 | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/quarter_annulus-quality.svg?raw=true) | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/quarter_annulus-poisson.svg?raw=true)
 
 
+### Sphere (surface)
+
+<img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/sphere-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/sphere-times.svg?raw=true) |
+:-------------:|:-----------------:|
+| ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/sphere-quality.svg?raw=true) | (Poisson problem not applicable.)
+
+
 ### Ball
 
 <img src="https://github.com/nschloe/meshgen-comparison/blob/gh-pages/ball-mesh.png?raw=true" width="50%"> | ![alt text](https://github.com/nschloe/meshgen-comparison/blob/gh-pages/ball-times.svg?raw=true) |
