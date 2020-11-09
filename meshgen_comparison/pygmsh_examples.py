@@ -82,6 +82,14 @@ def quarter_annulus(h):
     return mesh.points, mesh.get_cells_type("triangle")
 
 
+def sphere(h):
+    with pygmsh.occ.Geometry() as geom:
+        geom.characteristic_length_max = h
+        geom.add_ball([0, 0, 0], 1.0)
+        mesh = geom.generate_mesh(dim=2)
+    return mesh.points, mesh.get_cells_type("triangle")
+
+
 def ball(h):
     with pygmsh.occ.Geometry() as geom:
         geom.characteristic_length_max = h
@@ -128,5 +136,5 @@ if __name__ == "__main__":
     # points, cells = l_shape_3d(0.1)
     # points, cells = box_with_refinement(0.01)
     # points, cells = cylinder(0.05)
-    points, cells = quarter_annulus(0.01)
+    points, cells = sphere(0.1)
     meshio.Mesh(points, {"triangle": cells}).write("out.vtk")

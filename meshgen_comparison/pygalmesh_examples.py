@@ -53,6 +53,14 @@ def l_shape(h):
     return mesh.points, mesh.get_cells_type("triangle")
 
 
+def sphere(h):
+    s = pygalmesh.Ball([0, 0, 0], 1.0)
+    mesh = pygalmesh.generate_surface_mesh(
+        s, max_radius_surface_delaunay_ball=h, verbose=False
+    )
+    return mesh.points, mesh.get_cells_type("triangle")
+
+
 def ball(h):
     s = pygalmesh.Ball([0, 0, 0], 1.0)
     # The circumradius of a regular tetrahedron with the given edge_size is sqrt(3 / 8)
@@ -112,5 +120,5 @@ def box_with_refinement(h):
 if __name__ == "__main__":
     import meshio
 
-    points, cells = cylinder(0.1)
-    meshio.Mesh(points, {"tetra": cells}).write("out.vtk")
+    points, cells = sphere(0.1)
+    meshio.Mesh(points, {"triangle": cells}).write("out.vtk")
