@@ -67,8 +67,8 @@ domains_h = [
     ("quarter_annulus", numpy.logspace(-1.0, -3.0, num=15)),
     ("sphere", numpy.logspace(-1.0, -2.5, num=15)),
     ("ball", numpy.logspace(-1.0, -3.0, num=15)),
-    ("cylinder", numpy.logspace(-1.0, -3.0, num=15)),
-    ("l_shape_3d", numpy.logspace(-1.0, -1.8, num=15)),
+    ("cylinder", numpy.logspace(-1.0, -2.0, num=15)),
+    ("l_shape_3d", numpy.logspace(-1.0, -1.5, num=15)),
     ("box_with_refinement", numpy.logspace(-1.0, -2.0, num=15)),
 ]
 

@@ -1,7 +1,7 @@
 from importlib.metadata import version
 
-import numpy
 import meshzoo
+import numpy
 
 packages = [("meshzoo", version("meshzoo"))]
 colors = ("#8c564b", "#c49c94")  # cat20 brown

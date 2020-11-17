@@ -90,14 +90,14 @@ def box_with_refinement(h):
         return h + 0.1 * numpy.sqrt(x[:, 0] ** 2 + x[:, 1] ** 2 + x[:, 2] ** 2)
 
     points, cells = SeismicMesh.generate_mesh(
-        domain=cube, h0=h, edge_length=edge_length, verbose=False
+        domain=cube, h0=h, edge_length=edge_length, verbose=0
     )
     points, cells = SeismicMesh.sliver_removal(
         domain=cube,
         points=points,
         h0=h,
         edge_length=edge_length,
-        verbose=False,
+        verbose=0,
     )
     return points, cells
 
