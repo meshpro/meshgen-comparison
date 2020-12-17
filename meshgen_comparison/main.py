@@ -322,15 +322,18 @@ def create_plots(domain):
         label = ", ".join(" ".join(package) for package in module.packages)
         if domain in data["data"]:
             x = numpy.array(data["data"][domain]["num_nodes"])
-            y = numpy.array(data["data"][domain]["energy"])
             idx = numpy.argsort(x)
-            plt.semilogx(
-                x[idx], y[idx], linestyle="-", color=module.colors[0], label=label
-            )
+            try:
+                y = numpy.array(data["data"][domain]["energy"])
+            except KeyError:
+                pass
+            else:
+                plt.loglog(
+                    x[idx], y[idx], linestyle="-", color=module.colors[0], label=label
+                )
     dufte.legend()
     plt.xlabel("num points")
-    plt.title("energy")
-    plt.ylim(0.0)
+    plt.title("energy (lower is better)")
     plt.savefig(f"{domain}-energy.svg", transparent=True, bbox_inches="tight")
     # plt.show()
     plt.close()
