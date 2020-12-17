@@ -6,10 +6,12 @@ import numpy
 packages = [("dmsh", version("dmsh"))]
 colors = ("#2ca02c", "#98df8a")  # cat20 green
 
+max_steps = 10000
+
 
 def disk(h):
     geo = dmsh.Circle([0.0, 0.0], 1.0)
-    points, cells = dmsh.generate(geo, edge_size=h)
+    points, cells = dmsh.generate(geo, edge_size=h, max_steps=max_steps)
     return points, cells
 
     # points, cells = optimesh.cvt.quasi_newton_uniform_full(
@@ -32,6 +34,7 @@ def l_shape(h):
         ),
         edge_size=h,
         tol=1.0e-10,
+        max_steps=max_steps,
     )
 
 
@@ -40,6 +43,7 @@ def rect_with_refinement(h):
         dmsh.Rectangle(-1.0, 1.0, -1.0, 1.0),
         edge_size=lambda x: h + 0.1 * numpy.sqrt(x[0] ** 2 + x[1] ** 2),
         tol=1.0e-10,
+        max_steps=max_steps,
     )
 
 
@@ -52,7 +56,10 @@ def quarter_annulus(h):
     quarter = dmsh.Intersection([diff0, rect])
 
     points, cells = dmsh.generate(
-        quarter, edge_size=lambda x: h + 0.1 * numpy.abs(disk0.dist(x)), tol=1.0e-10
+        quarter,
+        edge_size=lambda x: h + 0.1 * numpy.abs(disk0.dist(x)),
+        tol=1.0e-10,
+        max_steps=max_steps,
     )
     return points, cells
 
