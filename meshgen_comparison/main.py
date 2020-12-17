@@ -27,6 +27,7 @@ from dolfin import (
     grad,
     inner,
 )
+import quadpy
 from rich.progress import Progress
 
 from meshgen_comparison import (
@@ -67,7 +68,7 @@ domains_h = [
     ("quarter_annulus", numpy.logspace(-1.0, -3.0, num=15)),
     ("sphere", numpy.logspace(-1.0, -2.5, num=15)),
     ("ball", numpy.logspace(-1.0, -3.0, num=15)),
-    ("cylinder", numpy.logspace(-1.0, -2.0, num=15)),
+    ("cylinder", numpy.logspace(-1.0, -1.9, num=15)),
     ("l_shape_3d", numpy.logspace(-1.0, -1.5, num=15)),
     ("box_with_refinement", numpy.logspace(-1.0, -2.0, num=15)),
 ]
@@ -88,6 +89,46 @@ def time_limiter(seconds):
         yield
     finally:
         signal.alarm(0)
+
+
+def energy(mesh):
+    """This is the mesh energy given by
+
+       E = int_Omega |u_l - u| * rho
+
+    with u = ||x||^2 and u_l being its piecewise linearization. This energy (or an
+    approximation thereof) is minimized in mesh optimization.
+
+    Note that u_l >= u, so the absolute value can be removed.
+
+    Only works for rho=1 right now.
+    """
+    if isinstance(mesh, meshplex.MeshTri):
+        scheme = quadpy.t2.get_good_scheme(2)
+    else:
+        assert isinstance(mesh, meshplex.MeshTetra)
+        scheme = quadpy.t3.get_good_scheme(2)
+
+    triangles = numpy.moveaxis(mesh.points[mesh.cells["points"]], 0, 1)
+
+    def u(x):
+        return numpy.einsum("i...,i...->...", x, x)
+
+    # int_Omega u
+    vals = scheme.integrate(u, triangles)
+    int_u = numpy.sum(vals)
+    # if uniform_density:
+    #     val = numpy.sum(val)
+    # else:
+    #     rho = 1.0 / mesh.cell_volumes
+    #     val = numpy.dot(val, rho)
+
+    # vertex scheme int_Omega u_l
+    vals = numpy.einsum("ij,ij->i", mesh.points, mesh.points)
+    int_ul = numpy.sum(
+        numpy.sum(vals[mesh.cells["points"]], axis=1) / 3 * mesh.cell_volumes
+    )
+    return int_ul - int_u
 
 
 def compute(fun, h):
@@ -112,6 +153,7 @@ def compute(fun, h):
         # convert to python float types to JSON compatibility
         "quality_min": float(numpy.min(mesh.q_radius_ratio)),
         "quality_avg": float(numpy.average(mesh.q_radius_ratio)),
+        "energy": energy(mesh),
         "num_nodes": mesh.points.shape[0],
         "num_poisson_steps": num_poisson_steps,
     }
@@ -180,6 +222,7 @@ def create_data(functions_h, time_limit=120):
         "time",
         "quality_min",
         "quality_avg",
+        "energy",
         "num_nodes",
         "num_poisson_steps",
     ]
@@ -267,6 +310,28 @@ def create_plots(domain):
     plt.title("cell quality, avg  and min (dashed)")
     plt.ylim(0.0, 1.0)
     plt.savefig(f"{domain}-quality.svg", transparent=True, bbox_inches="tight")
+    # plt.show()
+    plt.close()
+
+    # num nodes vs. energy
+    for module in modules:
+        name = module.packages[0][0]
+        json_filename = name.lower() + ".json"
+        with open(json_filename) as f:
+            data = json.load(f)
+        label = ", ".join(" ".join(package) for package in module.packages)
+        if domain in data["data"]:
+            x = numpy.array(data["data"][domain]["num_nodes"])
+            y = numpy.array(data["data"][domain]["energy"])
+            idx = numpy.argsort(x)
+            plt.semilogx(
+                x[idx], y[idx], linestyle="-", color=module.colors[0], label=label
+            )
+    dufte.legend()
+    plt.xlabel("num points")
+    plt.title("energy")
+    plt.ylim(0.0)
+    plt.savefig(f"{domain}-energy.svg", transparent=True, bbox_inches="tight")
     # plt.show()
     plt.close()
 
