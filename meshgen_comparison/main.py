@@ -68,8 +68,8 @@ domains_h = [
     ("quarter_annulus", numpy.logspace(-1.0, -3.0, num=15)),
     ("sphere", numpy.logspace(-1.0, -2.5, num=15)),
     ("ball", numpy.logspace(-1.0, -3.0, num=15)),
-    ("cylinder", numpy.logspace(-1.0, -1.9, num=15)),
-    ("l_shape_3d", numpy.logspace(-1.0, -1.5, num=15)),
+    ("cylinder", numpy.logspace(-1.0, -1.8, num=15)),
+    ("l_shape_3d", numpy.logspace(-1.0, -1.4, num=15)),
     ("box_with_refinement", numpy.logspace(-1.0, -2.0, num=15)),
 ]
 
@@ -160,8 +160,8 @@ def compute(fun, h):
 
 
 def update_data_file(module):
-    name, version = module.packages[0]
-    print(f"{name} {version}")
+    module_name, version = module.packages[0]
+    print(f"{module_name} {version}")
 
     # collect all possible functions
     functions_h = []
@@ -174,7 +174,7 @@ def update_data_file(module):
             functions_h.append((fun, H))
 
     # check if the existing data is up-to-date and skip if that's true
-    json_filename = name.lower() + ".json"
+    json_filename = module_name.lower() + ".json"
     if Path(json_filename).is_file():
         with open(json_filename) as f:
             content = json.load(f)
@@ -188,7 +188,7 @@ def update_data_file(module):
             ]
         else:
             # version outdated; rerun all
-            pass
+            content = {"data": {}}
     else:
         content = {"data": {}}
 
@@ -196,26 +196,10 @@ def update_data_file(module):
         print(f"{json_filename} up to date.")
         print()
         return
-    print(f"{len(functions_h)} domains remaining: ")
 
-    # skip if computed before
-    data = create_data(functions_h)
+    string = ", ".join(f.__name__ for f, _ in functions_h)
+    print(f"{len(functions_h)} domains remaining ({string}):")
 
-    # merge with original file content
-    data = {**content["data"], **data}  # `content["data"] | data` for Python 3.9+
-
-    # store data in files
-    with open(name.lower() + ".json", "w") as f:
-        now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
-        json.dump(
-            {"name": name, "date": now, "packages": module.packages, "data": data},
-            f,
-            indent=2,
-        )
-    print()
-
-
-def create_data(functions_h, time_limit=120):
     keys = [
         "h",
         "axpy_time",
@@ -226,12 +210,12 @@ def create_data(functions_h, time_limit=120):
         "num_nodes",
         "num_poisson_steps",
     ]
-    data = {}
+    time_limit = 120
     with Progress() as progress:
         task0 = progress.add_task("domains", total=len(functions_h))
         task1 = progress.add_task("h")
         for fun, H in functions_h:
-            data[fun.__name__] = {key: [] for key in keys}
+            data = {key: [] for key in keys}
             progress.update(task1, total=len(H))
             progress.reset(task1)
             for h in H:
@@ -244,16 +228,34 @@ def create_data(functions_h, time_limit=120):
                 except Exception:
                     print(f"Exception in mesh generation ({fun.__name__}).")
                     for key, val in vals.items():
-                        data[fun.__name__][key].append(numpy.nan)
+                        data[key].append(numpy.nan)
                 else:
                     for key, val in vals.items():
-                        data[fun.__name__][key].append(val)
+                        data[key].append(val)
 
-                data[fun.__name__]["h"].append(h)
-                data[fun.__name__]["axpy_time"].append(_measure_axpy(vals["num_nodes"]))
+                data["h"].append(h)
+                data["axpy_time"].append(_measure_axpy(vals["num_nodes"]))
                 progress.update(task1, advance=1)
+
+            # merge with original file content
+            content["data"][fun.__name__] = data
+
+            # store data in files
+            with open(module_name.lower() + ".json", "w") as f:
+                now = datetime.datetime.utcnow().replace(microsecond=0).isoformat()
+                json.dump(
+                    {
+                        "name": module_name,
+                        "date": now,
+                        "packages": module.packages,
+                        "data": content["data"],
+                    },
+                    f,
+                    indent=2,
+                )
+
             progress.update(task0, advance=1)
-    return data
+    print()
 
 
 def _measure_axpy(n):
