@@ -12,21 +12,6 @@ import matplotlib.pyplot as plt
 import meshio
 import meshplex
 import numpy
-from dolfin import (
-    Constant,
-    DirichletBC,
-    Function,
-    FunctionSpace,
-    KrylovSolver,
-    Mesh,
-    TestFunction,
-    TrialFunction,
-    XDMFFile,
-    assemble,
-    dx,
-    grad,
-    inner,
-)
 import quadpy
 from rich.progress import Progress
 
@@ -146,7 +131,8 @@ def compute(fun, h):
         num_poisson_steps = numpy.nan
     else:
         poisson_tol = 1.0e-10
-        num_poisson_steps = get_poisson_steps(points, cells, poisson_tol)
+        # num_poisson_steps = get_poisson_steps_dolfin(points, cells, poisson_tol)
+        num_poisson_steps = get_poisson_steps_scikitfem(points, cells, poisson_tol)
 
     return {
         "time": toc - tic,
@@ -362,7 +348,23 @@ def create_plots(domain):
     plt.close()
 
 
-def get_poisson_steps(pts, cells, tol):
+def get_poisson_steps_dolfin(pts, cells, tol):
+    from dolfin import (
+        Constant,
+        DirichletBC,
+        Function,
+        FunctionSpace,
+        KrylovSolver,
+        Mesh,
+        TestFunction,
+        TrialFunction,
+        XDMFFile,
+        assemble,
+        dx,
+        grad,
+        inner,
+    )
+
     # Still can't initialize a mesh from points, cells
     filename = "mesh.xdmf"
     if cells.shape[1] == 3:
@@ -422,6 +424,39 @@ def get_poisson_steps(pts, cells, tol):
     # out = pykry.gmres(A, b)
     # num_steps = len(out.resnorms)
     return num_steps
+
+
+def get_poisson_steps_scikitfem(points, cells, tol):
+    from skfem import (
+        MeshTri,
+        MeshTet,
+        InteriorBasis,
+        ElementTriP1,
+        ElementTetP1,
+        asm,
+        condense,
+    )
+    from skfem.models.poisson import laplace, unit_load
+    import krypy
+
+    if cells.shape[1] == 3:
+        mesh = MeshTri(points.T, cells.T)
+        e = ElementTriP1()
+    else:
+        assert cells.shape[1] == 4
+        mesh = MeshTet(points.T, cells.T)
+        e = ElementTetP1()
+
+    basis = InteriorBasis(mesh, e)
+
+    # assemble
+    A = asm(laplace, basis)
+    b = asm(unit_load, basis)
+
+    A, b = condense(A, b, I=mesh.interior_nodes(), expand=False)
+    _, info = krypy.cg(A, b, tol=tol)
+
+    return info.iter
 
 
 if __name__ == "__main__":
